@@ -1,6 +1,5 @@
-package com.smile.mypark.presentation.auth
+package com.smile.mypark.presentation.contest
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -11,41 +10,39 @@ import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-internal fun AuthRoute(
+internal fun ContestRoute(
     padding: PaddingValues,
-    onClickSign: () -> Unit,
-    //viewModel: AuthViewModel = hiltViewModel()
+    //viewModel: ContestViewModel = hiltViewModel()
 ) {
     //val viewState by viewModel.viewState.collectAsStateWithLifecycle()
 
-    AuthScreen(
+    ContestScreen(
         padding = padding,
         //viewState = viewState,
         //onClickDetail = onClickDetail
-        onClickSign = onClickSign
     )
 }
 
 @Composable
-private fun AuthScreen(
+private fun ContestScreen(
     padding: PaddingValues,
-    //viewState: AuthContract.AuthViewState,
-    onClickSign: () -> Unit,
+    //viewState: ContestContract.ContestViewState,
+    ///onClickDetail: () -> Unit,
 ) {
 
     Column(
         Modifier.padding(padding)
     ) {
-        Text("Auth", fontSize = 30.sp, modifier = Modifier.clickable(onClick = onClickSign))
+        Text("Contest", fontSize = 30.sp)
     }
 }
 
 @Preview
 @Composable
-private fun PreviewAuth() {
-    AuthScreen(
+private fun PreviewContest() {
+    ContestScreen(
         padding = PaddingValues(),
-//        viewState = AuthContract.AuthViewState(),
-        onClickSign = {}
+//        viewState = ContestContract.ContestViewState(),
+//        onClickDetail = {}
     )
 }
