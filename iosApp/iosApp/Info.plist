@@ -4,5 +4,8 @@
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+
+    <key>NSCameraUsageDescription</key>
+    <string>QR 코드를 스캔하기 위해 카메라 권한이 필요합니다.</string>
 </dict>
 </plist>

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.Icon
@@ -22,16 +23,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.key.Key.Companion.R
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.smile.mypark.core.ext.noRippleClickable
 import com.smile.mypark.presentation.main.navigation.MainTab
-import mypark.composeapp.generated.resources.Res
-import mypark.composeapp.generated.resources.compose_multiplatform
-import org.jetbrains.compose.resources.imageResource
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -51,19 +49,25 @@ internal fun MainBottomBar(
             modifier = modifier
                 .fillMaxWidth()
                 .height(56.dp)
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.outline,
-                ).background(
+                .background(
                     color = MaterialTheme.colorScheme.surface,
                 ),
         ) {
             tabs.forEach { tab ->
-                MainBottomBarItem(
-                    tab = tab,
-                    selected = tab == currentTab,
-                    onClick = { onTabSelected(tab) },
-                )
+                if (tab == MainTab.QR_F)
+                    Icon(
+                        painter = painterResource(tab.iconResId),
+                        contentDescription = tab.contentDescription,
+                        tint = Color.Unspecified,
+                        modifier = Modifier.size(66.dp).offset(y = (-20).dp)
+                            .noRippleClickable { onTabSelected(tab) }
+                    )
+                else
+                    MainBottomBarItem(
+                        tab = tab,
+                        selected = tab == currentTab,
+                        onClick = { onTabSelected(tab) },
+                    )
             }
         }
     }
@@ -90,7 +94,7 @@ private fun RowScope.MainBottomBarItem(
         contentAlignment = Alignment.Center,
     ) {
         Icon(
-            painter = painterResource(Res.drawable.compose_multiplatform),
+            painter = painterResource(tab.iconResId),
             contentDescription = tab.contentDescription,
             tint = if (selected) {
                 MaterialTheme.colorScheme.outline
@@ -105,10 +109,10 @@ private fun RowScope.MainBottomBarItem(
 @Preview
 @Composable
 private fun MainBottomBarPreview() {
-        MainBottomBar(
-            visible = true,
-            tabs = MainTab.entries,
-            currentTab = MainTab.HOME,
-            onTabSelected = { },
-        )
+    MainBottomBar(
+        visible = true,
+        tabs = MainTab.entries,
+        currentTab = MainTab.HOME,
+        onTabSelected = { },
+    )
 }

@@ -8,11 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun MyRoute(
     padding: PaddingValues,
-    //viewModel: MyViewModel = hiltViewModel()
 ) {
     //val viewState by viewModel.viewState.collectAsStateWithLifecycle()
 
