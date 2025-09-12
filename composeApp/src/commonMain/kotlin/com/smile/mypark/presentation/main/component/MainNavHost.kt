@@ -17,6 +17,7 @@ import com.smile.mypark.presentation.main.navigation.MainNavigator
 import com.smile.mypark.presentation.main.navigation.MainTabRoute
 import com.smile.mypark.presentation.main.navigation.Route
 import com.smile.mypark.presentation.my.MyRoute
+import com.smile.mypark.presentation.qr.QrRoute
 import com.smile.mypark.presentation.result.ResultRoute
 import com.smile.mypark.presentation.sign.SignRoute
 
@@ -69,7 +70,9 @@ internal fun MainNavHost(
                 MyRoute(padding = padding)
             }
 
-
+            composable<Route.QR> {
+                QrRoute(padding = padding)
+            }
         }
     }
 }

@@ -2,6 +2,8 @@ package com.smile.mypark.presentation.main.navigation
 
 import androidx.compose.runtime.Composable
 import mypark.composeapp.generated.resources.Res
+import mypark.composeapp.generated.resources.ic_blank
+import mypark.composeapp.generated.resources.ic_main_qr
 import mypark.composeapp.generated.resources.ic_test
 import org.jetbrains.compose.resources.DrawableResource
 
@@ -19,6 +21,12 @@ internal enum class MainTab(
     RESULT(
         iconResId = Res.drawable.ic_test,
         contentDescription = "결과",
+        MainTabRoute.Result
+    ),
+
+    QR_F(
+        iconResId = Res.drawable.ic_main_qr,
+        contentDescription = "qr",
         MainTabRoute.Result
     ),
 

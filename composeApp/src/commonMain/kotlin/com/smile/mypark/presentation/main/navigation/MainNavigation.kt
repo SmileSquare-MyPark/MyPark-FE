@@ -9,7 +9,6 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import io.ktor.client.plugins.auth.Auth
 
 internal class MainNavigator(
     val navController: NavHostController,
@@ -18,7 +17,7 @@ internal class MainNavigator(
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
 
-    val startDestination: Route = Route.Splash
+    val startDestination: Route = MainTabRoute.Home
 
     val currentTab: MainTab?
         @Composable get() = MainTab.find { tab ->
@@ -34,10 +33,15 @@ internal class MainNavigator(
 
         when (tab) {
             MainTab.HOME -> navigateHome(navOptions)
-            MainTab.My -> navigateMy(navOptions)
             MainTab.RESULT -> navigateResult(navOptions)
+            MainTab.QR_F -> navigateQr()
             MainTab.CONTEST -> navigateContest(navOptions)
+            MainTab.My -> navigateMy(navOptions)
         }
+    }
+
+    fun navigateQr(){
+        navController.navigate(Route.QR)
     }
 
     fun navigateHomeNoStack() {
