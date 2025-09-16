@@ -6,17 +6,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import mypark.composeapp.generated.resources.NanumSquareRoundB
-import mypark.composeapp.generated.resources.NanumSquareRoundL
 import mypark.composeapp.generated.resources.NanumSquareRoundR
 import mypark.composeapp.generated.resources.Res
 import org.jetbrains.compose.resources.Font
 
 @Composable
 fun NanumSquareFamily(): FontFamily = FontFamily(
-    Font(Res.font.NanumSquareRoundR, weight = FontWeight.Normal),
-     Font(Res.font.NanumSquareRoundB, weight = FontWeight.Bold),
-    Font(Res.font.NanumSquareRoundL, weight = FontWeight.Light),
+    Font(Res.font.NanumSquareRoundR, weight = FontWeight.Normal)
 )
 
 @Composable
