@@ -34,7 +34,7 @@ internal fun MainNavHost(
     ) {
         NavHost(
             navController = navigator.navController,
-            startDestination = navigator.startDestination,
+            startDestination = Route.Login
         ) {
             composable<Route.Splash> {
                 SplashScreen(
