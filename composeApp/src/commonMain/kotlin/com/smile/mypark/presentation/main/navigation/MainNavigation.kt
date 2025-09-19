@@ -17,7 +17,7 @@ internal class MainNavigator(
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
 
-    val startDestination: Route = Route.Login
+    val startDestination: Route = Route.Auth
 
     val currentTab: MainTab?
         @Composable get() = MainTab.find { tab ->
@@ -51,6 +51,10 @@ internal class MainNavigator(
 
     fun navigateSign(){
         navController.navigate(Route.Signup)
+    }
+
+    fun navigateLogin(){
+        navController.navigate(Route.Login)
     }
 
     fun navigateAuth(){

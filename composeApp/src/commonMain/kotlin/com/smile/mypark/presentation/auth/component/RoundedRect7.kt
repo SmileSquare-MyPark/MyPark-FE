@@ -3,11 +3,14 @@ package com.smile.mypark.presentation.auth.component
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,7 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.smile.mypark.core.ui.theme.Black
+import com.smile.mypark.core.ui.theme.Gray
+import com.smile.mypark.core.ui.theme.LightGray179
 import com.smile.mypark.core.ui.theme.Primary
+import kotlinx.serialization.json.JsonNull.content
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -53,17 +60,41 @@ fun RoundedRect7(
 @Composable
 fun BorderedRoundedRect7(
     modifier: Modifier = Modifier,
-    borderColor: Color = Color.Black,
-    borderWidth: Dp = 1.dp,
-    content: @Composable () -> Unit
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String,
+    borderColor: Color = Black,
+    borderWidth: Dp = 0.1.dp
 ) {
     RoundedRect7(
         modifier = modifier,
         containerColor = Color.White,
         border = BorderStroke(borderWidth, borderColor),
-        padding = PaddingValues(16.dp),
-        content = content
-    )
+        padding = PaddingValues()
+    ) {
+        TextField(
+            value = value,
+            onValueChange = onValueChange,
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    color = LightGray179,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            },
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                errorIndicatorColor = Color.Transparent
+            ),
+            singleLine = true
+        )
+    }
 }
 
 @Preview

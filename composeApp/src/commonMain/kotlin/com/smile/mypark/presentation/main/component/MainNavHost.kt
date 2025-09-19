@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.smile.mypark.core.ui.theme.White
 import com.smile.mypark.presentation.auth.AuthRoute
+import com.smile.mypark.presentation.auth.LoginRoute
 import com.smile.mypark.presentation.contest.ContestRoute
 import com.smile.mypark.presentation.home.HomeRoute
 import com.smile.mypark.presentation.main.SplashScreen
@@ -53,10 +54,16 @@ internal fun MainNavHost(
                 )
             }
 
-            composable<Route.Login> {
+            composable<Route.Auth> {
                 AuthRoute(
                     padding = padding,
-                    onClickSign = { navigator.navigateSign() })
+                    navigateLogin = { navigator.navigateLogin() })
+            }
+
+            composable<Route.Login> {
+                LoginRoute(
+                    padding = padding,
+                    onClickLogin = { navigator.navigateLogin() })
             }
 
             composable<Route.Signup> {

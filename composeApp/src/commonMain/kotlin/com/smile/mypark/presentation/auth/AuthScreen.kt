@@ -39,7 +39,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 internal fun AuthRoute(
     padding: PaddingValues,
-    onClickSign: () -> Unit,
+    navigateLogin: () -> Unit,
     onClickKakao: () -> Unit = {},
     onClickNaver: () -> Unit = {},
     //viewModel: AuthViewModel = hiltViewModel()
@@ -50,7 +50,7 @@ internal fun AuthRoute(
         padding = padding,
         //viewState = viewState,
         //onClickDetail = onClickDetail
-        onClickSign = onClickSign,
+        navigateLogin = navigateLogin,
         onClickKakao = onClickKakao,
         onClickNaver = onClickNaver
     )
@@ -60,7 +60,7 @@ internal fun AuthRoute(
 private fun AuthScreen(
     padding: PaddingValues,
     //viewState: AuthContract.AuthViewState,
-    onClickSign: () -> Unit,
+    navigateLogin: () -> Unit,
     onClickKakao: () -> Unit,
     onClickNaver: () -> Unit,
 ) {
@@ -87,7 +87,7 @@ private fun AuthScreen(
 
             MyparkLoginButton(
                 text = stringResource(Res.string.login),
-                onClick = onClickSign,
+                onClick = navigateLogin,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
@@ -136,7 +136,7 @@ private fun PreviewAuth() {
     AuthScreen(
         padding = PaddingValues(),
 //        viewState = AuthContract.AuthViewState(),
-        onClickSign = {},
+        navigateLogin = {},
         onClickKakao = {},
         onClickNaver = {}
     )
