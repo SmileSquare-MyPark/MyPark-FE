@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.smile.mypark.ui.theme.Primary
+import com.smile.mypark.core.ui.theme.Primary
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
