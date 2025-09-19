@@ -4,10 +4,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.Key.Companion.R
-import androidx.compose.ui.unit.sp
-import com.smile.mypark.ui.theme.NanumTypography
-import com.smile.mypark.ui.theme.Primary
+import androidx.compose.ui.text.font.FontWeight
+import com.smile.mypark.core.ext.toFixedSp
+import com.smile.mypark.core.ui.theme.Primary
 import mypark.composeapp.generated.resources.Res
 import mypark.composeapp.generated.resources.login_main_title
 import org.jetbrains.compose.resources.stringResource
@@ -20,9 +19,9 @@ fun AuthSubtitle(
 ) {
     Text(
         text = text,
-        style = NanumTypography().headlineLargeEB,
+        style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.toFixedSp(), lineHeight = 23.toFixedSp()),
         color = Primary,
-        fontSize = 22.sp,
+        fontWeight = FontWeight.ExtraBold,
         modifier = modifier
     )
 }

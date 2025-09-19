@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,12 +22,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.smile.mypark.core.ext.toFixedSp
+import com.smile.mypark.core.ui.theme.NeutralGray
 import com.smile.mypark.presentation.auth.component.AuthSubtitle
 import com.smile.mypark.presentation.auth.component.MyParkLogo
 import com.smile.mypark.presentation.auth.component.MyparkLoginButton
 import com.smile.mypark.presentation.auth.component.SocialCircleIcon
-import com.smile.mypark.ui.theme.NanumTypography
-import com.smile.mypark.ui.theme.NeutralGray
 import mypark.composeapp.generated.resources.Res
 import mypark.composeapp.generated.resources.copyright
 import mypark.composeapp.generated.resources.login
@@ -89,15 +90,15 @@ private fun AuthScreen(
                 onClick = onClickSign,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(60.dp)
-                    .padding(horizontal = 20.dp)
+                    .height(50.dp)
+                    .padding(horizontal = 30.dp)
             )
 
             Spacer(Modifier.height(50.dp))
 
             Text(
                 text = stringResource(Res.string.login_comfortable),
-                style = NanumTypography().titleMediumB,
+                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 14.toFixedSp(), lineHeight = 16.toFixedSp()),
                 color = NeutralGray,
             )
 
@@ -121,7 +122,7 @@ private fun AuthScreen(
 
         Text(
             text = stringResource(Res.string.copyright),
-            style = NanumTypography().bodySmallR,
+            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 10.toFixedSp(), lineHeight = 11.toFixedSp()),
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 40.dp)

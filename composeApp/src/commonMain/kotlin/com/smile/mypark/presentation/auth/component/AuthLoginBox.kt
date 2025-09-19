@@ -2,14 +2,15 @@ package com.smile.mypark.presentation.auth.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.smile.mypark.ui.theme.NanumTypography
-import com.smile.mypark.ui.theme.Primary
-import com.smile.mypark.ui.theme.White
+import com.smile.mypark.core.ext.toFixedSp
+import com.smile.mypark.core.ui.theme.Primary
+import com.smile.mypark.core.ui.theme.Sub
+import com.smile.mypark.core.ui.theme.White
 import mypark.composeapp.generated.resources.Res
 import mypark.composeapp.generated.resources.login
 import org.jetbrains.compose.resources.stringResource
@@ -24,13 +25,13 @@ fun MyparkLoginButton(
     RoundedRect7(
         modifier = modifier
             .fillMaxWidth()
-            .height(52.dp),
-        containerColor = Primary,
+            .height(47.dp),
+        containerColor = Sub,
         contentColor = White,
         centerContent = true,
         onClick = onClick
     ) {
-        Text(text = text, style = NanumTypography().titleMediumB, fontSize = 20.sp)
+        Text(text = text, style = MaterialTheme.typography.bodyLarge.copy(fontSize = 18.toFixedSp(), lineHeight = 20.toFixedSp(), color = White))
     }
 }
 

@@ -6,13 +6,14 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import mypark.composeapp.generated.resources.NanumSquareRoundB
 import mypark.composeapp.generated.resources.NanumSquareRoundR
 import mypark.composeapp.generated.resources.Res
 import org.jetbrains.compose.resources.Font
 
 @Composable
 fun nanumSquareFamily(): FontFamily = FontFamily(
-    Font(Res.font.NanumSquareRoundR, weight = FontWeight.Normal)
+    Font(Res.font.NanumSquareRoundB, weight = FontWeight.Normal)
 )
 
 
@@ -27,16 +28,24 @@ fun nanumTypography(): Typography {
     val nanum = nanumBaseStyle()
 
     return Typography(
-        bodyLarge = nanum.copy(
+        headlineLarge = nanum.copy( // extrabold
             fontWeight = FontWeight(600),
             color = Black
         ),
-        bodyMedium = nanum.copy(
+        titleLarge = nanum.copy(
             fontWeight = FontWeight(500),
             color = Black
         ),
-        bodySmall = nanum.copy(
+        bodyLarge = nanum.copy( // bold 체
             fontWeight = FontWeight(400),
+            color = Black
+        ),
+        bodyMedium = nanum.copy( // regular
+            fontWeight = FontWeight(200),
+            color = Black
+        ),
+        bodySmall = nanum.copy( // light
+            fontWeight = FontWeight(100),
             color = Black
         ),
 
