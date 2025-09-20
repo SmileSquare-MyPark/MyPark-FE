@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
@@ -22,11 +23,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.smile.mypark.core.ext.noRippleSingleClickable
 import com.smile.mypark.core.ext.toFixedSp
 import com.smile.mypark.core.ui.component.CustomRadioButton
 import com.smile.mypark.core.ui.theme.LightGray179
@@ -72,8 +75,8 @@ private fun LoginScreen(
     onClickSignUp: () -> Unit,
     onClickFindIdPw: () -> Unit,
 ) {
-    var autoLogin by remember { mutableStateOf(true) }
-    var autoIdLogin by remember { mutableStateOf(false) }
+    var autoLogin by rememberSaveable { mutableStateOf(false) }
+    var autoIdLogin by rememberSaveable { mutableStateOf(false) }
     val toggleAutoLogin = { autoLogin = !autoLogin }
     val toggleAutoIdLogin = { autoIdLogin = !autoIdLogin }
 
@@ -151,13 +154,14 @@ private fun LoginScreen(
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.clickable { toggleAutoLogin() }
+                    modifier = Modifier.noRippleSingleClickable { toggleAutoLogin }
                 ) {
                     CustomRadioButton(
                         selected = autoLogin,
                         onClick = toggleAutoLogin,
                         selectedIcon = Res.drawable.ic_radio_on,
-                        unselectedIcon = Res.drawable.ic_radio_off
+                        unselectedIcon = Res.drawable.ic_radio_off,
+                        modifier = Modifier.size(20.dp)
                     )
                     Spacer(Modifier.width(5.dp))
                     Text(
@@ -169,13 +173,14 @@ private fun LoginScreen(
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.clickable { toggleAutoIdLogin() }
+                    modifier = Modifier.noRippleSingleClickable { toggleAutoIdLogin() }
                 ) {
                     CustomRadioButton(
                         selected = autoIdLogin,
                         onClick = toggleAutoIdLogin,
                         selectedIcon = Res.drawable.ic_radio_on,
-                        unselectedIcon = Res.drawable.ic_radio_off
+                        unselectedIcon = Res.drawable.ic_radio_off,
+                        modifier = Modifier.size(20.dp)
                     )
                     Spacer(Modifier.width(5.dp))
                     Text(

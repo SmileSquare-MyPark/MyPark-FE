@@ -12,8 +12,8 @@ sealed interface Route {
     @Serializable
     data object Login : Route
 
-    @Serializable
-    data object Signup : Route
+//    @Serializable
+//    data object Signup : Route
 
     @Serializable
     data object QR : Route
@@ -34,4 +34,15 @@ sealed interface MainTabRoute : Route {
 
     @Serializable
     data object My : MainTabRoute
+}
+
+sealed interface Signup : Route {
+    @Serializable
+    data object Agreement : Signup
+
+    @Serializable
+    data object SetNickname : Signup
+
+    @Serializable
+    data object AuthPhone : Signup
 }

@@ -36,7 +36,6 @@ fun CustomRadioButton(
         contentDescription = null,
         tint = Color.Unspecified,
         modifier = modifier
-            .size(20.dp)
             .clickable { onClick() }
     )
 }

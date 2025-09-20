@@ -20,10 +20,13 @@ import com.smile.mypark.presentation.main.SplashScreen
 import com.smile.mypark.presentation.main.navigation.MainNavigator
 import com.smile.mypark.presentation.main.navigation.MainTabRoute
 import com.smile.mypark.presentation.main.navigation.Route
+import com.smile.mypark.presentation.main.navigation.Signup
 import com.smile.mypark.presentation.my.MyRoute
 import com.smile.mypark.presentation.qr.QrRoute
 import com.smile.mypark.presentation.result.ResultRoute
-import com.smile.mypark.presentation.sign.SignRoute
+import com.smile.mypark.presentation.sign.AgreementRoute
+import com.smile.mypark.presentation.sign.AuthPhoneRoute
+import com.smile.mypark.presentation.sign.SetNicknameRoute
 
 @Composable
 internal fun MainNavHost(
@@ -63,11 +66,29 @@ internal fun MainNavHost(
             composable<Route.Login> {
                 LoginRoute(
                     padding = padding,
-                    onClickLogin = { navigator.navigateLogin() })
+                    onClickLogin = { navigator.navigateLogin() },
+                    onClickSignUp = { navigator.navigateSign() }
+                )
             }
 
-            composable<Route.Signup> {
-                SignRoute(padding = padding)
+            composable<Signup.Agreement> {
+                AgreementRoute(
+                    padding = padding,
+                    selected = false,
+                    onClick = { navigator.navigateNickname() }
+                )
+            }
+
+            composable<Signup.SetNickname> {
+                SetNicknameRoute(
+                    padding = padding
+                )
+            }
+
+            composable<Signup.AuthPhone> {
+                AuthPhoneRoute(
+                    padding = padding
+                )
             }
 
             composable<MainTabRoute.Home> {

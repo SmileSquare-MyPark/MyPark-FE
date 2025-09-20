@@ -10,14 +10,14 @@ import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-internal fun SignRoute(
+internal fun AuthPhoneRoute(
     padding: PaddingValues
 //    onClickDetail: () -> Unit,
     //viewModel: SignViewModel = hiltViewModel()
 ) {
     //val viewState by viewModel.viewState.collectAsStateWithLifecycle()
 
-    SignScreen(
+    AuthPhoneScreen(
         padding = padding
         //viewState = viewState,
         //onClickDetail = onClickDetail
@@ -25,7 +25,7 @@ internal fun SignRoute(
 }
 
 @Composable
-private fun SignScreen(
+private fun AuthPhoneScreen(
     padding: PaddingValues
     //viewState: SignContract.SignViewState,
     ///onClickDetail: () -> Unit,
@@ -41,7 +41,7 @@ private fun SignScreen(
 @Preview
 @Composable
 private fun PreviewSign() {
-    SignScreen(
+    AuthPhoneScreen(
         padding = PaddingValues(),
 //        viewState = SignContract.SignViewState(),
 //        onClickDetail = {}
