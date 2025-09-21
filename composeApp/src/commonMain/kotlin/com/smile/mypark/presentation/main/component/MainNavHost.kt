@@ -81,13 +81,15 @@ internal fun MainNavHost(
 
             composable<Signup.SetNickname> {
                 SetNicknameRoute(
-                    padding = padding
+                    padding = padding,
+                    onClick = { navigator.navigatePhone() }
                 )
             }
 
             composable<Signup.AuthPhone> {
                 AuthPhoneRoute(
-                    padding = padding
+                    padding = padding,
+                    onClick = {  }
                 )
             }
 

@@ -115,6 +115,11 @@ private fun LoginScreen(
                 value = id,
                 onValueChange = { id = it },
                 placeholder = stringResource(Res.string.login_id),
+                textStyle = MaterialTheme.typography.bodyLarge.copy(
+                    fontSize = 13.toFixedSp(),
+                    lineHeight = 17.toFixedSp(),
+                    color = LightGray179
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
@@ -127,6 +132,11 @@ private fun LoginScreen(
                 value = pw,
                 onValueChange = { pw = it },
                 placeholder = stringResource(Res.string.login_pw),
+                textStyle = MaterialTheme.typography.bodyLarge.copy(
+                    fontSize = 13.toFixedSp(),
+                    lineHeight = 17.toFixedSp(),
+                    color = LightGray179
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)

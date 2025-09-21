@@ -31,6 +31,7 @@ import com.smile.mypark.presentation.auth.component.MyparkLoginButton
 import com.smile.mypark.presentation.auth.component.RoundedRect7
 import com.smile.mypark.presentation.sign.component.TermsList
 import mypark.composeapp.generated.resources.Res
+import mypark.composeapp.generated.resources.agreement
 import mypark.composeapp.generated.resources.ic_radio_off
 import mypark.composeapp.generated.resources.ic_radio_on
 import mypark.composeapp.generated.resources.marketing_advertising_use
@@ -78,12 +79,13 @@ private fun AgreementScreen(
         Modifier
             .fillMaxSize()
             .background(White)
-            .padding(padding),
+            .padding(bottom = 120.dp, top = 60.dp),
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
         Spacer(Modifier.height(15.dp))
         Topbar(
+            title = stringResource(Res.string.agreement),
             onClick = {}
         )
         Spacer(Modifier.height(40.dp))
@@ -213,7 +215,7 @@ private fun AgreementScreen(
                 showSeeMore = false
             )
         }
-        Spacer(Modifier.height(105.dp))
+        Spacer(Modifier.weight(1f))
 
         MyparkLoginButton(
             text = stringResource(Res.string.next),

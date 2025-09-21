@@ -1,24 +1,54 @@
 package com.smile.mypark.presentation.sign
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.smile.mypark.core.ext.toFixedSp
+import com.smile.mypark.core.ui.component.Topbar
+import com.smile.mypark.core.ui.theme.Black
+import com.smile.mypark.core.ui.theme.LightGray179
+import com.smile.mypark.core.ui.theme.NeutralGray
+import com.smile.mypark.core.ui.theme.White
+import com.smile.mypark.presentation.auth.component.BorderedRoundedRect7
+import com.smile.mypark.presentation.auth.component.MyparkLoginButton
+import mypark.composeapp.generated.resources.Res
+import mypark.composeapp.generated.resources.enter_nickname
+import mypark.composeapp.generated.resources.next
+import mypark.composeapp.generated.resources.nickname_guide
+import mypark.composeapp.generated.resources.required_nickname
+import mypark.composeapp.generated.resources.set_nickname
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun SetNicknameRoute(
-    padding: PaddingValues
+    padding: PaddingValues,
+    onClick: () -> Unit
 //    onClickDetail: () -> Unit,
     //viewModel: SignViewModel = hiltViewModel()
 ) {
     //val viewState by viewModel.viewState.collectAsStateWithLifecycle()
 
     SetNicknameScreen(
-        padding = padding
+        padding = padding,
+        onClick = onClick
         //viewState = viewState,
         //onClickDetail = onClickDetail
     )
@@ -26,15 +56,87 @@ internal fun SetNicknameRoute(
 
 @Composable
 private fun SetNicknameScreen(
-    padding: PaddingValues
+    padding: PaddingValues,
+    onClick: () -> Unit
     //viewState: SignContract.SignViewState,
     ///onClickDetail: () -> Unit,
 ) {
-
     Column(
-        Modifier.padding(padding)
+        Modifier
+            .fillMaxSize()
+            .background(White)
+            .padding(bottom = 120.dp, top = 60.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+
     ) {
-        Text("Sign", fontSize = 30.sp)
+        Spacer(Modifier.height(15.dp))
+        Topbar(
+            title = stringResource(Res.string.set_nickname),
+            onClick = {}
+        )
+        Spacer(Modifier.height(40.dp))
+
+        Text(
+            text = stringResource(Res.string.required_nickname),
+            style = MaterialTheme.typography.headlineLarge.copy(
+                fontSize = 20.toFixedSp(),
+                lineHeight = 23.toFixedSp(),
+                color = Black
+            )
+        )
+        Spacer(Modifier.height(30.dp))
+
+        Text(
+            text = stringResource(Res.string.nickname_guide),
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontSize = 14.toFixedSp(),
+                lineHeight = 16.toFixedSp(),
+                color = NeutralGray
+            ),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 50.dp)
+        )
+
+        Spacer(Modifier.height(35.dp))
+
+        Text(
+            text = stringResource(Res.string.set_nickname),
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontSize = 15.toFixedSp(),
+                lineHeight = 17.toFixedSp(),
+                color = NeutralGray
+            )
+        )
+
+        Spacer(Modifier.height(17.dp))
+
+        var nickname by rememberSaveable { mutableStateOf("") }
+
+        BorderedRoundedRect7(
+            value = nickname,
+            onValueChange = { nickname = it },
+            placeholder = stringResource(Res.string.enter_nickname),
+            textStyle = MaterialTheme.typography.bodyLarge.copy(
+                fontSize = 13.toFixedSp(),
+                lineHeight = 17.toFixedSp(),
+                color = LightGray179
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+                .padding(horizontal = 30.dp)
+        )
+
+        Spacer(Modifier.weight(1f))
+
+        MyparkLoginButton(
+            text = stringResource(Res.string.next),
+            onClick = onClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+                .padding(horizontal = 40.dp)
+        )
     }
 }
 
@@ -43,6 +145,7 @@ private fun SetNicknameScreen(
 private fun PreviewSign() {
     SetNicknameScreen(
         padding = PaddingValues(),
+        onClick = {  }
 //        viewState = SignContract.SignViewState(),
 //        onClickDetail = {}
     )

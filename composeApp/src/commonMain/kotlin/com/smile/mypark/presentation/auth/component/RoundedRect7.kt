@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.smile.mypark.core.ui.theme.Black
@@ -64,7 +65,8 @@ fun BorderedRoundedRect7(
     onValueChange: (String) -> Unit,
     placeholder: String,
     borderColor: Color = Black,
-    borderWidth: Dp = 0.1.dp
+    borderWidth: Dp = 0.1.dp,
+    textStyle: TextStyle
 ) {
     RoundedRect7(
         modifier = modifier,
@@ -75,6 +77,7 @@ fun BorderedRoundedRect7(
         TextField(
             value = value,
             onValueChange = onValueChange,
+            textStyle = textStyle,
             placeholder = {
                 Text(
                     text = placeholder,

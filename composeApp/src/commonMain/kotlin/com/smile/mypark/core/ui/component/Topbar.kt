@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +30,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun Topbar(
+    title: String,
     onClick: () -> Unit,
 ) {
     Box(
@@ -43,10 +45,11 @@ fun Topbar(
             modifier = Modifier
                 .noRippleSingleClickable { onClick() }
                 .align(Alignment.CenterStart)
+                .size(22.dp)
 
         )
         Text(
-            text = stringResource(Res.string.agreement),
+            text = title,
             style = MaterialTheme.typography.bodyLarge.copy(
                 fontSize = 15.toFixedSp(),
                 lineHeight = 17.toFixedSp(),
@@ -60,6 +63,7 @@ fun Topbar(
 @Composable
 fun PreviewTopbar(){
     Topbar(
+        title = stringResource(Res.string.agreement),
         onClick = {}
     )
 
