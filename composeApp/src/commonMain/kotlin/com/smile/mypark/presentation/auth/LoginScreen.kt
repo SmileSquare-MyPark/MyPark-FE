@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,10 +30,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.smile.mypark.core.ext.noRippleSingleClickable
 import com.smile.mypark.core.ext.toFixedSp
 import com.smile.mypark.core.ui.component.CustomRadioButton
+import com.smile.mypark.core.ui.theme.Black
 import com.smile.mypark.core.ui.theme.LightGray179
 import com.smile.mypark.core.ui.theme.NeutralGray
 import com.smile.mypark.domain.model.Dummy
@@ -118,7 +124,11 @@ private fun LoginScreen(
                 textStyle = MaterialTheme.typography.bodyLarge.copy(
                     fontSize = 13.toFixedSp(),
                     lineHeight = 17.toFixedSp(),
-                    color = LightGray179
+                    color = Black
+                ),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Next
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -135,8 +145,14 @@ private fun LoginScreen(
                 textStyle = MaterialTheme.typography.bodyLarge.copy(
                     fontSize = 13.toFixedSp(),
                     lineHeight = 17.toFixedSp(),
-                    color = LightGray179
+                    color = Black
                 ),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(onDone = { onClickLogin() }),
+                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
@@ -145,9 +161,11 @@ private fun LoginScreen(
 
             Spacer(Modifier.height(7.dp))
 
+            val canLogin = id.isNotBlank() && pw.isNotBlank()
+
             MyparkLoginButton(
                 text = stringResource(Res.string.login),
-                onClick = onClickLogin,
+                onClick = { if (canLogin) onClickLogin() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
@@ -164,7 +182,7 @@ private fun LoginScreen(
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.noRippleSingleClickable { toggleAutoLogin }
+                    modifier = Modifier.noRippleSingleClickable { toggleAutoLogin() }
                 ) {
                     CustomRadioButton(
                         selected = autoLogin,
