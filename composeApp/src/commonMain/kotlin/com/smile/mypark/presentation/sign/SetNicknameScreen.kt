@@ -124,7 +124,7 @@ private fun SetNicknameScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
-                .padding(horizontal = 30.dp)
+                .padding(horizontal = 40.dp)
         )
 
         Spacer(Modifier.weight(1f))
