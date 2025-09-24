@@ -22,6 +22,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.mypark.core.ext.noRippleSingleClickable
 import com.smile.mypark.core.ext.toFixedSp
 import com.smile.mypark.core.ui.component.CustomRadioButton
@@ -58,6 +60,7 @@ import mypark.composeapp.generated.resources.login_pw
 import mypark.composeapp.generated.resources.login_warning
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun LoginRoute(
@@ -65,12 +68,28 @@ internal fun LoginRoute(
     onClickLogin: () -> Unit,
     onClickSignUp: () -> Unit = {},
     onClickFindIdPw: () -> Unit = {},
+    viewModel: AuthViewModel = koinViewModel()
 ) {
+    val state by viewModel.viewState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(viewModel) {
+        viewModel.effect.collect { eff ->
+            when (eff) {
+                AuthContract.AuthSideEffect.NavigateHome -> onClickLogin()
+                AuthContract.AuthSideEffect.NavigateSignup -> onClickSignUp()
+                AuthContract.AuthSideEffect.NavigateFindIdPw -> onClickFindIdPw()
+                is AuthContract.AuthSideEffect.Toast -> {/* show toast */}
+            }
+        }
+    }
+
     LoginScreen(
         padding = padding,
         onClickLogin = onClickLogin,
         onClickSignUp = onClickSignUp,
-        onClickFindIdPw = onClickFindIdPw
+        onClickFindIdPw = onClickFindIdPw,
+        state = state,
+        onEvent = viewModel::setEvent
     )
 }
 
@@ -80,11 +99,9 @@ private fun LoginScreen(
     onClickLogin: () -> Unit,
     onClickSignUp: () -> Unit,
     onClickFindIdPw: () -> Unit,
+    state: AuthContract.AuthState,
+    onEvent: (AuthContract.AuthEvent) -> Unit
 ) {
-    var autoLogin by rememberSaveable { mutableStateOf(false) }
-    var autoIdLogin by rememberSaveable { mutableStateOf(false) }
-    val toggleAutoLogin = { autoLogin = !autoLogin }
-    val toggleAutoIdLogin = { autoIdLogin = !autoIdLogin }
 
     Box(
         modifier = Modifier
@@ -114,12 +131,9 @@ private fun LoginScreen(
 
             Spacer(Modifier.height(13.dp))
 
-            var id by remember { mutableStateOf("") }
-            var pw by remember { mutableStateOf("") }
-
             BorderedRoundedRect7(
-                value = id,
-                onValueChange = { id = it },
+                value = state.id,
+                onValueChange = { onEvent(AuthContract.AuthEvent.IdChanged(it)) },
                 placeholder = stringResource(Res.string.login_id),
                 textStyle = MaterialTheme.typography.bodyLarge.copy(
                     fontSize = 13.toFixedSp(),
@@ -139,8 +153,8 @@ private fun LoginScreen(
             Spacer(Modifier.height(5.dp))
 
             BorderedRoundedRect7(
-                value = pw,
-                onValueChange = { pw = it },
+                value = state.pw,
+                onValueChange = { onEvent(AuthContract.AuthEvent.PwChanged(it)) },
                 placeholder = stringResource(Res.string.login_pw),
                 textStyle = MaterialTheme.typography.bodyLarge.copy(
                     fontSize = 13.toFixedSp(),
@@ -151,7 +165,7 @@ private fun LoginScreen(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done
                 ),
-                keyboardActions = KeyboardActions(onDone = { onClickLogin() }),
+                keyboardActions = KeyboardActions(onDone = { onEvent(AuthContract.AuthEvent.ClickLogin) }),
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -161,11 +175,11 @@ private fun LoginScreen(
 
             Spacer(Modifier.height(7.dp))
 
-            val canLogin = id.isNotBlank() && pw.isNotBlank()
+            val canLogin = state.id.isNotBlank() && state.pw.isNotBlank()
 
             MyparkLoginButton(
                 text = stringResource(Res.string.login),
-                onClick = { if (canLogin) onClickLogin() },
+                onClick = { if (canLogin) onEvent(AuthContract.AuthEvent.ClickLogin) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
@@ -182,11 +196,11 @@ private fun LoginScreen(
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.noRippleSingleClickable { toggleAutoLogin() }
+                    modifier = Modifier.noRippleSingleClickable { onEvent(AuthContract.AuthEvent.ToggleAutoLogin) }
                 ) {
                     CustomRadioButton(
-                        selected = autoLogin,
-                        onClick = toggleAutoLogin,
+                        selected = state.autoLogin,
+                        onClick = { onEvent(AuthContract.AuthEvent.ToggleAutoLogin) },
                         selectedIcon = Res.drawable.ic_radio_on,
                         unselectedIcon = Res.drawable.ic_radio_off,
                         modifier = Modifier.size(20.dp)
@@ -201,11 +215,11 @@ private fun LoginScreen(
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.noRippleSingleClickable { toggleAutoIdLogin() }
+                    modifier = Modifier.noRippleSingleClickable { onEvent(AuthContract.AuthEvent.ToggleAutoIdLogin) }
                 ) {
                     CustomRadioButton(
-                        selected = autoIdLogin,
-                        onClick = toggleAutoIdLogin,
+                        selected = state.autoIdLogin,
+                        onClick = { onEvent(AuthContract.AuthEvent.ToggleAutoIdLogin) },
                         selectedIcon = Res.drawable.ic_radio_on,
                         unselectedIcon = Res.drawable.ic_radio_off,
                         modifier = Modifier.size(20.dp)
@@ -256,6 +270,8 @@ private fun PreviewLogin(){
         padding = PaddingValues(),
         onClickLogin = {},
         onClickSignUp = {},
-        onClickFindIdPw = {}
+        onClickFindIdPw = {},
+        state = AuthContract.AuthState(),
+        onEvent = {}
     )
 }
