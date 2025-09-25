@@ -65,9 +65,9 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun LoginRoute(
     padding: PaddingValues,
-    onClickLogin: () -> Unit,
-    onClickSignUp: () -> Unit = {},
-    onClickFindIdPw: () -> Unit = {},
+    navigateToHome: () -> Unit,
+    navigateToSignUp: () -> Unit,
+    navigateToFindIdPw: () -> Unit,
     viewModel: AuthViewModel = koinViewModel()
 ) {
     val state by viewModel.viewState.collectAsStateWithLifecycle()
@@ -75,19 +75,17 @@ internal fun LoginRoute(
     LaunchedEffect(viewModel) {
         viewModel.effect.collect { eff ->
             when (eff) {
-                AuthContract.AuthSideEffect.NavigateHome -> onClickLogin()
-                AuthContract.AuthSideEffect.NavigateSignup -> onClickSignUp()
-                AuthContract.AuthSideEffect.NavigateFindIdPw -> onClickFindIdPw()
-                is AuthContract.AuthSideEffect.Toast -> {/* show toast */}
+                AuthContract.AuthSideEffect.NavigateHome -> navigateToHome()
+                AuthContract.AuthSideEffect.NavigateSignup -> navigateToSignUp()
+                AuthContract.AuthSideEffect.NavigateFindIdPw -> navigateToFindIdPw()
+                is AuthContract.AuthSideEffect.Toast -> { /* show toast */ }
             }
+
         }
     }
 
     LoginScreen(
         padding = padding,
-        onClickLogin = onClickLogin,
-        onClickSignUp = onClickSignUp,
-        onClickFindIdPw = onClickFindIdPw,
         state = state,
         onEvent = viewModel::setEvent
     )
@@ -96,9 +94,6 @@ internal fun LoginRoute(
 @Composable
 private fun LoginScreen(
     padding: PaddingValues,
-    onClickLogin: () -> Unit,
-    onClickSignUp: () -> Unit,
-    onClickFindIdPw: () -> Unit,
     state: AuthContract.AuthState,
     onEvent: (AuthContract.AuthEvent) -> Unit
 ) {
@@ -246,13 +241,13 @@ private fun LoginScreen(
                     text = "회원가입",
                     style = MaterialTheme.typography.bodyLarge.copy(fontSize = 13.toFixedSp(), lineHeight = 15.toFixedSp()),
                     color = LightGray179,
-                    modifier = Modifier.clickable { onClickSignUp() }
+                    modifier = Modifier.clickable { onEvent(AuthContract.AuthEvent.ClickSignUp) }
                 )
                 Text(
                     text = "아이디/비밀번호 찾기",
                     style = MaterialTheme.typography.bodyLarge.copy(fontSize = 13.toFixedSp(), lineHeight = 15.toFixedSp()),
                     color = LightGray179,
-                    modifier = Modifier.clickable { onClickFindIdPw() }
+                    modifier = Modifier.clickable { onEvent(AuthContract.AuthEvent.ClickFindIdPw) }
                 )
             }
 
@@ -268,9 +263,6 @@ private fun LoginScreen(
 private fun PreviewLogin(){
     LoginScreen(
         padding = PaddingValues(),
-        onClickLogin = {},
-        onClickSignUp = {},
-        onClickFindIdPw = {},
         state = AuthContract.AuthState(),
         onEvent = {}
     )

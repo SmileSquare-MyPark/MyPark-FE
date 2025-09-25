@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
+    
+
     <string name="login_main_title">함께 해서 즐거운 마이파크</string>
     <string name="login">MYPARK 로그인</string>
     <string name="login_comfortable">간편 로그인</string>
@@ -56,4 +58,12 @@
     <string name="ball_speed">볼스피드</string>
     <string name="launch_angle">발사각</string>
     <string name="back_spin">백스핀</string>
+    <string name="password_title">비밀번호를 설정 해주세요</string>
+    <string name="password_sub">비밀번호를 입력해주세요.</string>
+    <string name="new_password">새로운 비밀번호</string>
+    <string name="require_password">새로운 비밀번호를 입력해주세요</string>
+    <string name="confirm_password">비밀번호 확인</string>
+    <string name="complete_sign_up">MYPARK 가입이 \n완료되었습니다.</string>
+    <string name="welcome_app">회원가입을 축하합니다!\n로그인 하여 마이파크를 이용해보세요!</string>
+    <string name="confirm">확인</string>
 </resources>

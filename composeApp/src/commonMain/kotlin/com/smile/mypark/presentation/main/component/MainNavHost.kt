@@ -27,6 +27,8 @@ import com.smile.mypark.presentation.result.ResultRoute
 import com.smile.mypark.presentation.sign.AgreementRoute
 import com.smile.mypark.presentation.sign.AuthPhoneRoute
 import com.smile.mypark.presentation.sign.SetNicknameRoute
+import com.smile.mypark.presentation.sign.SetPasswordRoute
+import com.smile.mypark.presentation.sign.WelcomeRoute
 
 @Composable
 internal fun MainNavHost(
@@ -66,8 +68,9 @@ internal fun MainNavHost(
             composable<Route.Login> {
                 LoginRoute(
                     padding = padding,
-                    onClickLogin = { navigator.navigateLogin() },
-                    onClickSignUp = { navigator.navigateSign() }
+                    navigateToHome = { navigator.navigateHomeNoStack() },
+                    navigateToSignUp = { navigator.navigateSign() },
+                    navigateToFindIdPw = { }
                 )
             }
 
@@ -75,13 +78,6 @@ internal fun MainNavHost(
                 AgreementRoute(
                     padding = padding,
                     selected = false,
-                    onClick = { navigator.navigateNickname() }
-                )
-            }
-
-            composable<Signup.SetNickname> {
-                SetNicknameRoute(
-                    padding = padding,
                     onClick = { navigator.navigatePhone() }
                 )
             }
@@ -89,7 +85,28 @@ internal fun MainNavHost(
             composable<Signup.AuthPhone> {
                 AuthPhoneRoute(
                     padding = padding,
-                    onClick = {  }
+                    onClick = { navigator.navigatePassword() }
+                )
+            }
+
+            composable<Signup.SetNickname> {
+                SetNicknameRoute(
+                    padding = padding,
+                    onClick = { navigator.navigateWelcome() }
+                )
+            }
+
+            composable<Signup.SetPassword> {
+                SetPasswordRoute(
+                    padding = padding,
+                    onClick = { navigator.navigateNickname() }
+                )
+            }
+
+            composable<Signup.Welcome> {
+                WelcomeRoute(
+                    padding = padding,
+                    onClick = { navigator.navigateHomeNoStack() }
                 )
             }
 

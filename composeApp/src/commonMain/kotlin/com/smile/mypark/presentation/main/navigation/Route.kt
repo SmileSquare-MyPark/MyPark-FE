@@ -41,8 +41,14 @@ sealed interface Signup : Route {
     data object Agreement : Signup
 
     @Serializable
+    data object AuthPhone : Signup
+
+    @Serializable
+    data object SetPassword : Signup
+
+    @Serializable
     data object SetNickname : Signup
 
     @Serializable
-    data object AuthPhone : Signup
+    data object Welcome : Signup
 }
