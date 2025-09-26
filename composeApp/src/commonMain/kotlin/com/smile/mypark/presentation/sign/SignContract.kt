@@ -12,6 +12,7 @@ class SignContract {
 
         val uid: String = "",
         val password: String = "",
+        val passwordConfirm: String = "",
         val nickname: String = "",
 
         val phoneNumber: String = "",
@@ -20,6 +21,10 @@ class SignContract {
         val phoneVerified: Boolean = false
     ) : ViewState {
         val isNextEnabled: Boolean get() = required.all { it }
+        val isPasswordReady: Boolean
+            get() = password.isNotBlank() &&
+                    passwordConfirm.isNotBlank() &&
+                    password == passwordConfirm
     }
 
     sealed interface Event : ViewEvent {
@@ -30,14 +35,18 @@ class SignContract {
         data class ClickDetailRequired(val index: Int) : Event
         data class ClickDetailOptional(val index: Int) : Event
         data class UidChanged(val uid: String) : Event
-        data class PwChanged(val pw: String) : Event
         data class NicknameChanged(val nickname: String) : Event
 
         data class PhoneChanged(val v: String) : Event
         data class CodeChanged(val v: String) : Event
 
+        data object ClickPhoneNext : Event
         data object ClickSendCode : Event
         data object ClickVerifyCode : Event
+
+        data class PwChanged(val pw: String) : Event
+        data class PwConfirmChanged(val pw: String) : Event
+        data object ClickPasswordNext : Event
     }
 
     sealed interface SideEffect : ViewSideEffect {

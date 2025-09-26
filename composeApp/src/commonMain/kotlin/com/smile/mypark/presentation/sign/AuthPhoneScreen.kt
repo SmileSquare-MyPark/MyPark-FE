@@ -49,18 +49,25 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun AuthPhoneRoute(
     padding: PaddingValues,
-    onClick: () -> Unit,
+    navigateNext: () -> Unit,
     viewModel: SignViewModel = koinViewModel()
 ) {
     val state by viewModel.viewState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(state.phoneNumber) {
-        println("[ROUTE] phoneNumber changed -> '${state.phoneNumber}'")
+    LaunchedEffect(viewModel) {
+        viewModel.effect.collect { eff ->
+            when (eff) {
+                SignContract.SideEffect.NavigateNext -> navigateNext()
+                is SignContract.SideEffect.Toast -> {
+                    // 스낵바/토스트 표시
+                }
+                else -> Unit
+            }
+        }
     }
 
     AuthPhoneScreen(
         padding = padding,
-        onClick = onClick,
         state = state,
         onEvent = viewModel::setEvent,
 
@@ -71,8 +78,7 @@ internal fun AuthPhoneRoute(
 private fun AuthPhoneScreen(
     padding: PaddingValues,
     state: SignContract.State,
-    onEvent: (SignContract.Event) -> Unit,
-    onClick: () -> Unit
+    onEvent: (SignContract.Event) -> Unit
 ) {
     Column(
         Modifier
@@ -82,7 +88,6 @@ private fun AuthPhoneScreen(
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-        Text("allChecked = ${state.allChecked}")
         Spacer(Modifier.height(15.dp))
         Topbar(
             title = stringResource(Res.string.register),
@@ -126,8 +131,7 @@ private fun AuthPhoneScreen(
 
         BorderedRoundedRect7(
             value = state.phoneNumber,
-            onValueChange = {     println("[UI] phone input: '$it'")
-                onEvent(SignContract.Event.PhoneChanged(it)) },
+            onValueChange = { onEvent(SignContract.Event.PhoneChanged(it)) },
             placeholder = stringResource(Res.string.enter_phone_number),
             textStyle = MaterialTheme.typography.bodyLarge.copy(
                 fontSize = 13.toFixedSp(),
@@ -206,7 +210,7 @@ private fun AuthPhoneScreen(
 
         MyparkLoginButton(
             text = stringResource(Res.string.next),
-            onClick = onClick,
+            onClick = { onEvent(SignContract.Event.ClickPhoneNext) },
             enabled = state.phoneVerified, // 인증 성공해야 다음
             modifier = Modifier
                 .fillMaxWidth()
@@ -221,7 +225,6 @@ private fun AuthPhoneScreen(
 private fun PreviewSign() {
     AuthPhoneScreen(
         padding = PaddingValues(),
-        onClick = {},
         state = SignContract.State(),
         onEvent = {}
     )

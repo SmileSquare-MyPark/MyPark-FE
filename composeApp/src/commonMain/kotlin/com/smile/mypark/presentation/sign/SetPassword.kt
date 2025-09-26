@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -23,6 +24,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.mypark.core.ext.toFixedSp
 import com.smile.mypark.core.ui.component.Topbar
 import com.smile.mypark.core.ui.theme.Black
@@ -47,25 +49,33 @@ internal fun SetPasswordRoute(
     padding: PaddingValues,
     onClick: () -> Unit,
     viewModel: SignViewModel = koinViewModel()
-//    onClickDetail: () -> Unit,
-    //viewModel: SignViewModel = hiltViewModel()
 ) {
-    //val viewState by viewModel.viewState.collectAsStateWithLifecycle()
+    val viewState by viewModel.viewState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(viewModel) {
+        viewModel.effect.collect { eff ->
+            when (eff) {
+                SignContract.SideEffect.NavigateNext -> onClick()
+                is SignContract.SideEffect.Toast -> {
+                    // 스낵바/토스트 표시
+                }
+                else -> Unit
+            }
+        }
+    }
 
     SetPasswordScreen(
         padding = padding,
-        onClick = onClick
-        //viewState = viewState,
-        //onClickDetail = onClickDetail
+        viewState = viewState,
+        onEvent = viewModel::setEvent,
     )
 }
 
 @Composable
 private fun SetPasswordScreen(
     padding: PaddingValues,
-    onClick: () -> Unit
-    //viewState: SignContract.SignViewState,
-    ///onClickDetail: () -> Unit,
+    viewState: SignContract.State,
+    onEvent: (SignContract.Event) -> Unit
 ) {
     Column(
         Modifier
@@ -116,11 +126,9 @@ private fun SetPasswordScreen(
 
         Spacer(Modifier.height(17.dp))
 
-        var newPassword by rememberSaveable { mutableStateOf("") }
-
         BorderedRoundedRect7(
-            value = newPassword,
-            onValueChange = { newPassword = it },
+            value = viewState.password,
+            onValueChange = { onEvent(SignContract.Event.PwChanged(it)) },
             placeholder = stringResource(Res.string.require_password),
             textStyle = MaterialTheme.typography.bodyLarge.copy(
                 fontSize = 13.toFixedSp(),
@@ -141,8 +149,8 @@ private fun SetPasswordScreen(
         Spacer(Modifier.height(5.dp))
 
         BorderedRoundedRect7(
-            value = newPassword,
-            onValueChange = { newPassword = it },
+            value = viewState.passwordConfirm,
+            onValueChange = { onEvent(SignContract.Event.PwConfirmChanged(it)) },
             placeholder = stringResource(Res.string.confirm_password),
             textStyle = MaterialTheme.typography.bodyLarge.copy(
                 fontSize = 13.toFixedSp(),
@@ -168,8 +176,8 @@ private fun SetPasswordScreen(
                 .fillMaxWidth()
                 .height(50.dp)
                 .padding(horizontal = 40.dp),
-            onClick = onClick,
-            enabled = newPassword.isNotBlank()
+            onClick = { onEvent(SignContract.Event.ClickPasswordNext) },
+            enabled = viewState.isPasswordReady
         )
     }
 }
@@ -179,8 +187,7 @@ private fun SetPasswordScreen(
 private fun PreviewSetPassword() {
     SetPasswordScreen(
         padding = PaddingValues(),
-        onClick = {  }
-//        viewState = SignContract.SignViewState(),
-//        onClickDetail = {}
+        viewState = SignContract.State(),
+        onEvent = {}
     )
 }

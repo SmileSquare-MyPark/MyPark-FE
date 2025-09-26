@@ -102,7 +102,7 @@ internal fun MainNavHost(
 
                     AuthPhoneRoute(
                         padding = padding,
-                        onClick = { navigator.navigatePassword() },
+                        navigateNext = { navigator.navigatePassword() },
                         viewModel = viewModel
                     )
                 }
