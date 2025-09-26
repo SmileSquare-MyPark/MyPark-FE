@@ -26,6 +26,7 @@ class SignViewModel (
 
             is SignContract.Event.UidChanged -> updateState { copy(uid = event.uid) }
             is SignContract.Event.NicknameChanged -> updateState { copy(nickname = event.nickname) }
+            SignContract.Event.ClickNicknameNext -> onNicknameNext()
 
             is SignContract.Event.PhoneChanged -> updateState { copy(phoneNumber = event.v) }
             is SignContract.Event.CodeChanged  -> updateState { copy(verificationCode = event.v) }
@@ -98,6 +99,15 @@ class SignViewModel (
             }
             sendEffect ({ SignContract.SideEffect.Toast(msg) })
 
+        }
+    }
+
+    private fun onNicknameNext() {
+        val s = viewState.value
+        if (s.isNicknameReady) {
+            sendEffect ({ SignContract.SideEffect.NavigateNext })
+        } else {
+            sendEffect ({ SignContract.SideEffect.Toast("닉네임을 확인해 주세요.") })
         }
     }
 

@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.mypark.core.ext.toFixedSp
 import com.smile.mypark.core.ui.component.Topbar
 import com.smile.mypark.core.ui.theme.Black
@@ -42,27 +44,33 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun SetNicknameRoute(
     padding: PaddingValues,
-    onClick: () -> Unit,
+    navigateNext: () -> Unit,
     viewModel: SignViewModel = koinViewModel()
-//    onClickDetail: () -> Unit,
-    //viewModel: SignViewModel = hiltViewModel()
 ) {
-    //val viewState by viewModel.viewState.collectAsStateWithLifecycle()
+    val state by viewModel.viewState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(viewModel) {
+        viewModel.effect.collect { eff ->
+            when (eff) {
+                SignContract.SideEffect.NavigateNext -> navigateNext()
+                is SignContract.SideEffect.Toast -> { /* 스낵바/토스트 */ }
+                else -> Unit
+            }
+        }
+    }
 
     SetNicknameScreen(
         padding = padding,
-        onClick = onClick
-        //viewState = viewState,
-        //onClickDetail = onClickDetail
+        state = state,
+        onEvent = viewModel::setEvent
     )
 }
 
 @Composable
 private fun SetNicknameScreen(
     padding: PaddingValues,
-    onClick: () -> Unit
-    //viewState: SignContract.SignViewState,
-    ///onClickDetail: () -> Unit,
+    state: SignContract.State,
+    onEvent: (SignContract.Event) -> Unit
 ) {
     Column(
         Modifier
@@ -113,11 +121,9 @@ private fun SetNicknameScreen(
 
         Spacer(Modifier.height(17.dp))
 
-        var nickname by rememberSaveable { mutableStateOf("") }
-
         BorderedRoundedRect7(
-            value = nickname,
-            onValueChange = { nickname = it },
+            value = state.nickname,
+            onValueChange = { onEvent(SignContract.Event.NicknameChanged(it)) },
             placeholder = stringResource(Res.string.enter_nickname),
             textStyle = MaterialTheme.typography.bodyLarge.copy(
                 fontSize = 13.toFixedSp(),
@@ -141,8 +147,8 @@ private fun SetNicknameScreen(
                 .fillMaxWidth()
                 .height(50.dp)
                 .padding(horizontal = 40.dp),
-            onClick = onClick,
-            enabled = nickname.isNotBlank()
+            onClick = { onEvent(SignContract.Event.ClickNicknameNext) },
+            enabled = state.isNicknameReady
         )
     }
 }
@@ -152,8 +158,7 @@ private fun SetNicknameScreen(
 private fun PreviewSign() {
     SetNicknameScreen(
         padding = PaddingValues(),
-        onClick = {  }
-//        viewState = SignContract.SignViewState(),
-//        onClickDetail = {}
+        state = SignContract.State(),
+        onEvent = {}
     )
 }

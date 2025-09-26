@@ -21,10 +21,8 @@ class SignContract {
         val phoneVerified: Boolean = false
     ) : ViewState {
         val isNextEnabled: Boolean get() = required.all { it }
-        val isPasswordReady: Boolean
-            get() = password.isNotBlank() &&
-                    passwordConfirm.isNotBlank() &&
-                    password == passwordConfirm
+        val isPasswordReady: Boolean get() = password.isNotBlank() && passwordConfirm.isNotBlank() && password == passwordConfirm
+        val isNicknameReady: Boolean get() = nickname.isNotBlank()
     }
 
     sealed interface Event : ViewEvent {
@@ -36,6 +34,8 @@ class SignContract {
         data class ClickDetailOptional(val index: Int) : Event
         data class UidChanged(val uid: String) : Event
         data class NicknameChanged(val nickname: String) : Event
+        data object ClickNicknameNext : Event
+
 
         data class PhoneChanged(val v: String) : Event
         data class CodeChanged(val v: String) : Event
