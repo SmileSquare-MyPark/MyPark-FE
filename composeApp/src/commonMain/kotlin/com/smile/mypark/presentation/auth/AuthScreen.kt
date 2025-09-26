@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.smile.mypark.core.ext.toFixedSp
 import com.smile.mypark.core.ui.theme.NeutralGray
 import com.smile.mypark.presentation.auth.component.AuthSubtitle
@@ -87,11 +86,12 @@ private fun AuthScreen(
 
             MyparkLoginButton(
                 text = stringResource(Res.string.login),
-                onClick = navigateLogin,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
-                    .padding(horizontal = 30.dp)
+                    .padding(horizontal = 30.dp),
+                onClick = navigateLogin,
+                enabled = true
             )
 
             Spacer(Modifier.height(50.dp))

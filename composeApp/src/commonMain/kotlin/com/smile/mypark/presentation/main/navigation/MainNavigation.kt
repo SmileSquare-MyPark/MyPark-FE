@@ -54,27 +54,22 @@ internal class MainNavigator(
     }
 
     fun navigatePhone(){
-        navController.popBackStack()
         navController.navigate(Signup.AuthPhone)
     }
 
     fun navigatePassword(){
-        navController.popBackStack()
         navController.navigate(Signup.SetPassword)
     }
 
     fun navigateNickname(){
-        navController.popBackStack()
         navController.navigate(Signup.SetNickname)
     }
 
     fun navigateWelcome(){
-        navController.popBackStack()
         navController.navigate(Signup.Welcome)
     }
 
     fun navigateLogin(){
-        navController.popBackStack()
         navController.navigate(Route.Login)
     }
 

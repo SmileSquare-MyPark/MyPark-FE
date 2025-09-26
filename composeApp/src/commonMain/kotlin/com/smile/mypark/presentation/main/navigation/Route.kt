@@ -36,6 +36,10 @@ sealed interface MainTabRoute : Route {
     data object My : MainTabRoute
 }
 
+@Serializable
+data object SignupGraph : Route
+
+@Serializable
 sealed interface Signup : Route {
     @Serializable
     data object Agreement : Signup

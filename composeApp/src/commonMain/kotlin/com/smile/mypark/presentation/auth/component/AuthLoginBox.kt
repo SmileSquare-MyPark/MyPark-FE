@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.smile.mypark.core.ext.toFixedSp
-import com.smile.mypark.core.ui.theme.Primary
 import com.smile.mypark.core.ui.theme.Sub
 import com.smile.mypark.core.ui.theme.White
 import mypark.composeapp.generated.resources.Res
@@ -20,7 +19,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun MyparkLoginButton(
     text: String,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    enabled: Boolean
 ) {
     RoundedRect7(
         modifier = modifier
@@ -38,7 +38,9 @@ fun MyparkLoginButton(
 @Preview
 @Composable
 fun MyparkLoginButtonPreview() {
-    MyparkLoginButton(text = stringResource(Res.string.login)) {
-
-    }
+    MyparkLoginButton(
+        text = stringResource(Res.string.login),
+        onClick = { },
+        enabled = true
+    )
 }

@@ -26,30 +26,27 @@ import androidx.compose.ui.unit.dp
 import com.smile.mypark.core.ext.toFixedSp
 import com.smile.mypark.core.ui.component.Topbar
 import com.smile.mypark.core.ui.theme.Black
-import com.smile.mypark.core.ui.theme.LightGray179
 import com.smile.mypark.core.ui.theme.NeutralGray
 import com.smile.mypark.core.ui.theme.White
 import com.smile.mypark.presentation.auth.component.BorderedRoundedRect7
 import com.smile.mypark.presentation.auth.component.MyparkLoginButton
 import mypark.composeapp.generated.resources.Res
 import mypark.composeapp.generated.resources.confirm_password
-import mypark.composeapp.generated.resources.enter_nickname
 import mypark.composeapp.generated.resources.new_password
 import mypark.composeapp.generated.resources.next
-import mypark.composeapp.generated.resources.nickname_guide
 import mypark.composeapp.generated.resources.password_sub
 import mypark.composeapp.generated.resources.password_title
 import mypark.composeapp.generated.resources.register
 import mypark.composeapp.generated.resources.require_password
-import mypark.composeapp.generated.resources.required_nickname
-import mypark.composeapp.generated.resources.set_nickname
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun SetPasswordRoute(
     padding: PaddingValues,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    viewModel: SignViewModel = koinViewModel()
 //    onClickDetail: () -> Unit,
     //viewModel: SignViewModel = hiltViewModel()
 ) {
@@ -167,11 +164,12 @@ private fun SetPasswordScreen(
 
         MyparkLoginButton(
             text = stringResource(Res.string.next),
-            onClick = onClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
-                .padding(horizontal = 40.dp)
+                .padding(horizontal = 40.dp),
+            onClick = onClick,
+            enabled = newPassword.isNotBlank()
         )
     }
 }

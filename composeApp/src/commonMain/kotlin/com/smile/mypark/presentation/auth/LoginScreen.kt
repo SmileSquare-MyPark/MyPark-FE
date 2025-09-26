@@ -24,13 +24,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -42,20 +37,14 @@ import com.smile.mypark.core.ui.component.CustomRadioButton
 import com.smile.mypark.core.ui.theme.Black
 import com.smile.mypark.core.ui.theme.LightGray179
 import com.smile.mypark.core.ui.theme.NeutralGray
-import com.smile.mypark.domain.model.Dummy
-import com.smile.mypark.presentation.auth.component.AuthSubtitle
 import com.smile.mypark.presentation.auth.component.BorderedRoundedRect7
 import com.smile.mypark.presentation.auth.component.MyParkLogo
 import com.smile.mypark.presentation.auth.component.MyparkLoginButton
-import com.smile.mypark.presentation.auth.component.SocialCircleIcon
 import mypark.composeapp.generated.resources.Res
-import mypark.composeapp.generated.resources.copyright
 import mypark.composeapp.generated.resources.ic_radio_off
 import mypark.composeapp.generated.resources.ic_radio_on
 import mypark.composeapp.generated.resources.login
-import mypark.composeapp.generated.resources.login_comfortable
 import mypark.composeapp.generated.resources.login_id
-import mypark.composeapp.generated.resources.login_main_title
 import mypark.composeapp.generated.resources.login_pw
 import mypark.composeapp.generated.resources.login_warning
 import org.jetbrains.compose.resources.stringResource
@@ -174,11 +163,12 @@ private fun LoginScreen(
 
             MyparkLoginButton(
                 text = stringResource(Res.string.login),
-                onClick = { if (canLogin) onEvent(AuthContract.AuthEvent.ClickLogin) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
-                    .padding(horizontal = 30.dp)
+                    .padding(horizontal = 30.dp),
+                onClick = { if (canLogin) onEvent(AuthContract.AuthEvent.ClickLogin) },
+                enabled = canLogin
             )
 
             Spacer(Modifier.height(11.dp))

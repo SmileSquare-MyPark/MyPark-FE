@@ -19,14 +19,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.smile.mypark.core.ext.toFixedSp
 import com.smile.mypark.core.ui.component.Topbar
 import com.smile.mypark.core.ui.theme.Black
-import com.smile.mypark.core.ui.theme.LightGray179
 import com.smile.mypark.core.ui.theme.NeutralGray
 import com.smile.mypark.core.ui.theme.White
 import com.smile.mypark.presentation.auth.component.BorderedRoundedRect7
@@ -40,11 +37,13 @@ import mypark.composeapp.generated.resources.required_nickname
 import mypark.composeapp.generated.resources.set_nickname
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun SetNicknameRoute(
     padding: PaddingValues,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    viewModel: SignViewModel = koinViewModel()
 //    onClickDetail: () -> Unit,
     //viewModel: SignViewModel = hiltViewModel()
 ) {
@@ -138,11 +137,12 @@ private fun SetNicknameScreen(
 
         MyparkLoginButton(
             text = stringResource(Res.string.next),
-            onClick = onClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
-                .padding(horizontal = 40.dp)
+                .padding(horizontal = 40.dp),
+            onClick = onClick,
+            enabled = nickname.isNotBlank()
         )
     }
 }

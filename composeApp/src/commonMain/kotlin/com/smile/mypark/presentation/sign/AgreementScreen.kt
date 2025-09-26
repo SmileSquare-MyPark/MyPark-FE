@@ -15,10 +15,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.mypark.core.ext.noRippleSingleClickable
 import com.smile.mypark.core.ext.toFixedSp
 import com.smile.mypark.core.ui.component.CustomRadioButton
@@ -46,35 +49,56 @@ import mypark.composeapp.generated.resources.terms_unified
 import mypark.composeapp.generated.resources.use_kakao_profile
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun AgreementRoute(
     padding: PaddingValues,
-    selected: Boolean,
-    onClick: () -> Unit
-
-//    onClickDetail: () -> Unit,
-    //viewModel: SignViewModel = hiltViewModel()
+    navigateNext: () -> Unit,
+    viewModel: SignViewModel = koinViewModel()
 ) {
-    //val viewState by viewModel.viewState.collectAsStateWithLifecycle()
+    val state by viewModel.viewState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(viewModel) {
+        viewModel.effect.collect { eff ->
+            when (eff) {
+                SignContract.SideEffect.NavigateNext -> navigateNext()
+                is SignContract.SideEffect.ShowTermsDetail -> {
+                    // 약관 상세 화면
+                }
+                is SignContract.SideEffect.Toast -> {
+                    // 스낵바/토스트
+                }
+            }
+        }
+    }
+
 
     AgreementScreen(
         padding = padding,
-        selected = selected,
-        onClick = onClick
-        //viewState = viewState,
-        //onClickDetail = onClickDetail
+        state = state,
+        onEvent = viewModel::setEvent
     )
 }
 
 @Composable
 private fun AgreementScreen(
     padding: PaddingValues,
-    selected: Boolean,
-    onClick: () -> Unit
-    //viewState: SignContract.SignViewState,
-    ///onClickDetail: () -> Unit,
+    state: SignContract.State,
+    onEvent: (SignContract.Event) -> Unit
 ) {
+    val titlesRequired = listOf(
+        stringResource(Res.string.terms_unified),
+        stringResource(Res.string.privacy_collection_usage_details),
+        stringResource(Res.string.terms_location),
+        stringResource(Res.string.privacy_third_party_provision)
+    )
+    val titlesOptional = listOf(
+        stringResource(Res.string.marketing_advertising_use),
+        stringResource(Res.string.sns_receive),
+        stringResource(Res.string.use_kakao_profile),
+    )
+
     Column(
         Modifier
             .fillMaxSize()
@@ -121,7 +145,7 @@ private fun AgreementScreen(
             RoundedRect7(
                 modifier = Modifier
                     .height(48.dp)
-                    .noRippleSingleClickable( onClick )
+                    .noRippleSingleClickable { onEvent(SignContract.Event.ToggleAll) }
                     .padding(horizontal = 40.dp),
                 VeryLightGray230,
                 padding = PaddingValues(vertical = 0.dp)
@@ -133,8 +157,8 @@ private fun AgreementScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     CustomRadioButton(
-                        selected = selected,
-                        onClick = onClick,
+                        selected = state.allChecked,
+                        onClick = { onEvent(SignContract.Event.ToggleAll) },
                         selectedIcon = Res.drawable.ic_radio_on,
                         unselectedIcon = Res.drawable.ic_radio_off,
                         modifier = Modifier
@@ -162,68 +186,39 @@ private fun AgreementScreen(
                 .fillMaxWidth()
                 .padding(start = 52.dp, end = 40.dp)
         ) {
-            TermsList(
-                title = stringResource(Res.string.terms_unified),
-                selected = false,
-                onToggle = { /* TODO */ },
-                onClickDetail = { /* TODO: 약관 보기 이동 */ }
-            )
-            TermsList(
-                title = stringResource(Res.string.privacy_collection_usage_details),
-                selected = false,
-                onToggle = { /* TODO */ },
-                onClickDetail = { /* TODO */ }
-            )
-            TermsList(
-                title = stringResource(Res.string.terms_location),
-                selected = false,
-                onToggle = { /* TODO */ },
-                onClickDetail = { /* TODO */ }
-            )
-            TermsList(
-                title = stringResource(Res.string.privacy_third_party_provision),
-                selected = false,
-                onToggle = { /* TODO */ },
-                onClickDetail = { /* TODO */ }
-            )
-            TermsList(
-                title = stringResource(Res.string.terms_unified),
-                selected = false,
-                onToggle = { /* TODO */ },
-                onClickDetail = { /* TODO */ }
-            )
-            TermsList(
-                title = stringResource(Res.string.marketing_advertising_use),
-                selected = false,
-                onToggle = { /* TODO */ },
-                onClickDetail = { /* TODO */ }
-            )
+            // 필수
+            titlesRequired.forEachIndexed { i, title ->
+                TermsList(
+                    title = title,
+                    selected = state.required[i],
+                    onToggle = { onEvent(SignContract.Event.ToggleRequired(i)) },
+                    onClickDetail = { onEvent(SignContract.Event.ClickDetailRequired(i)) }
+                )
+            }
 
             Spacer(Modifier.height(35.dp))
-            TermsList(
-                title = stringResource(Res.string.sns_receive),
-                selected = false,
-                onToggle = { /* TODO */ },
-                onClickDetail = { /* TODO */ },
-                showSeeMore = false
-            )
-            TermsList(
-                title = stringResource(Res.string.use_kakao_profile),
-                selected = false,
-                onToggle = { /* TODO */ },
-                onClickDetail = { /* TODO */ },
-                showSeeMore = false
-            )
+
+            // 선택
+            titlesOptional.forEachIndexed { i, title ->
+                TermsList(
+                    title = title,
+                    selected = state.optional[i],
+                    onToggle = { onEvent(SignContract.Event.ToggleOptional(i)) },
+                    onClickDetail = { onEvent(SignContract.Event.ClickDetailOptional(i)) },
+                    showSeeMore = false
+                )
+            }
         }
         Spacer(Modifier.weight(1f))
 
         MyparkLoginButton(
             text = stringResource(Res.string.next),
-            onClick = onClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
-                .padding(horizontal = 40.dp)
+                .padding(horizontal = 40.dp),
+            onClick = { onEvent(SignContract.Event.ClickNext) },
+            enabled = state.isNextEnabled
         )
     }
 }
@@ -233,9 +228,7 @@ private fun AgreementScreen(
 private fun PreviewAgreement() {
     AgreementScreen(
         padding = PaddingValues(),
-        selected = true,
-        onClick = {}
-//        viewState = SignContract.SignViewState(),
-//        onClickDetail = {}
+        state = SignContract.State(),
+        onEvent = {}
     )
 }
