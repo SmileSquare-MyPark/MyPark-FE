@@ -13,5 +13,5 @@ expect val platformModule: Module
 expect fun provideHttpClient(config: NetworkConfig): HttpClient
 
 val sharedNetworkModule = module {
-    single<HttpClient> { provideHttpClient(get()) }
+    single<HttpClient> { HttpClientFactory.create(get()) }
 }
