@@ -4,11 +4,12 @@ import com.smile.mypark.core.base.ViewEvent
 import com.smile.mypark.core.base.ViewSideEffect
 import com.smile.mypark.core.base.ViewState
 
+
 class SignContract {
     data class State(
         val allChecked: Boolean = false,
-        val required: List<Boolean> = listOf(false, false, false, false), // 필수 항목 개수에 맞게
-        val optional: List<Boolean> = listOf(false, false, false),        // 선택 항목 개수에 맞게
+        val required: Map<RequiredTerm, Boolean> = RequiredTerm.entries.associateWith { false },
+        val optional: Map<OptionalTerm, Boolean> = OptionalTerm.entries.associateWith { false },
 
         val uid: String = "",
         val password: String = "",
@@ -18,17 +19,18 @@ class SignContract {
         val phoneNumber: String = "",
         val verificationCode: String = "",
         val phoneLoading: Boolean = false,
-        val phoneVerified: Boolean = false
+        val phoneVerified: Boolean = false,
+        val registerLoading: Boolean = false
     ) : ViewState {
-        val isNextEnabled: Boolean get() = required.all { it }
+        val isNextEnabled: Boolean get() = required.values.all { it }
         val isPasswordReady: Boolean get() = password.isNotBlank() && passwordConfirm.isNotBlank() && password == passwordConfirm
         val isNicknameReady: Boolean get() = nickname.isNotBlank()
     }
 
     sealed interface Event : ViewEvent {
         data object ToggleAll : Event
-        data class ToggleRequired(val index: Int) : Event
-        data class ToggleOptional(val index: Int) : Event
+        data class ToggleRequired(val key: RequiredTerm) : Event
+        data class ToggleOptional(val key: OptionalTerm) : Event
         data object ClickNext : Event
         data class ClickDetailRequired(val index: Int) : Event
         data class ClickDetailOptional(val index: Int) : Event
@@ -47,6 +49,8 @@ class SignContract {
         data class PwChanged(val pw: String) : Event
         data class PwConfirmChanged(val pw: String) : Event
         data object ClickPasswordNext : Event
+
+        data object ClickRegister : Event
     }
 
     sealed interface SideEffect : ViewSideEffect {
@@ -56,3 +60,6 @@ class SignContract {
         data class Toast(val msg: String) : SideEffect
     }
 }
+
+enum class RequiredTerm { UNIFIED, PRIVACY, LOCATION, THIRD_PARTY }
+enum class OptionalTerm { MARKETING, SNS, KAKAO_PROFILE }

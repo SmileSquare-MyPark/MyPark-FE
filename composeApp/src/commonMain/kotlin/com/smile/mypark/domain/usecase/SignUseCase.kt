@@ -1,5 +1,6 @@
 package com.smile.mypark.domain.usecase
 
+import com.smile.mypark.domain.model.RegisterInfo
 import com.smile.mypark.domain.repository.SignRepository
 
 class SendVerificationCodeUseCase(
@@ -14,4 +15,10 @@ class VerifyCodeUseCase(
 ) {
     suspend operator fun invoke(phoneNumber: String, certificationCode: String) =
         repository.verifyCode(phoneNumber, certificationCode)
+}
+
+class RegisterUseCase(
+    private val repository: SignRepository
+) {
+    suspend operator fun invoke(info: RegisterInfo) = repository.register(info)
 }

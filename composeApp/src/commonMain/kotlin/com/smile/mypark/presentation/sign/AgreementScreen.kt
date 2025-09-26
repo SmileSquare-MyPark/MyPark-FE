@@ -87,16 +87,16 @@ private fun AgreementScreen(
     state: SignContract.State,
     onEvent: (SignContract.Event) -> Unit
 ) {
-    val titlesRequired = listOf(
-        stringResource(Res.string.terms_unified),
-        stringResource(Res.string.privacy_collection_usage_details),
-        stringResource(Res.string.terms_location),
-        stringResource(Res.string.privacy_third_party_provision)
+    val requiredItems = listOf(
+        RequiredTerm.UNIFIED      to stringResource(Res.string.terms_unified),
+        RequiredTerm.PRIVACY      to stringResource(Res.string.privacy_collection_usage_details),
+        RequiredTerm.LOCATION     to stringResource(Res.string.terms_location),
+        RequiredTerm.THIRD_PARTY  to stringResource(Res.string.privacy_third_party_provision),
     )
-    val titlesOptional = listOf(
-        stringResource(Res.string.marketing_advertising_use),
-        stringResource(Res.string.sns_receive),
-        stringResource(Res.string.use_kakao_profile),
+    val optionalItems = listOf(
+        OptionalTerm.MARKETING     to stringResource(Res.string.marketing_advertising_use),
+        OptionalTerm.SNS           to stringResource(Res.string.sns_receive),
+        OptionalTerm.KAKAO_PROFILE to stringResource(Res.string.use_kakao_profile),
     )
 
     Column(
@@ -187,11 +187,11 @@ private fun AgreementScreen(
                 .padding(start = 52.dp, end = 40.dp)
         ) {
             // 필수
-            titlesRequired.forEachIndexed { i, title ->
+            requiredItems.forEachIndexed { i, (key, title) ->
                 TermsList(
                     title = title,
-                    selected = state.required[i],
-                    onToggle = { onEvent(SignContract.Event.ToggleRequired(i)) },
+                    selected = state.required[key] == true,
+                    onToggle = { onEvent(SignContract.Event.ToggleRequired(key)) },
                     onClickDetail = { onEvent(SignContract.Event.ClickDetailRequired(i)) }
                 )
             }
@@ -199,11 +199,11 @@ private fun AgreementScreen(
             Spacer(Modifier.height(35.dp))
 
             // 선택
-            titlesOptional.forEachIndexed { i, title ->
+            optionalItems.forEachIndexed { i, (key, title) ->
                 TermsList(
                     title = title,
-                    selected = state.optional[i],
-                    onToggle = { onEvent(SignContract.Event.ToggleOptional(i)) },
+                    selected = state.optional[key] == true,
+                    onToggle = { onEvent(SignContract.Event.ToggleOptional(key)) },
                     onClickDetail = { onEvent(SignContract.Event.ClickDetailOptional(i)) },
                     showSeeMore = false
                 )

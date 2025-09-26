@@ -1,6 +1,7 @@
 package com.smile.mypark.data.network
 
 import com.smile.mypark.data.remote.dto.CommonResponseDto
+import com.smile.mypark.data.remote.dto.RegisterRequestDto
 import com.smile.mypark.data.remote.dto.SendCodeRequestDto
 import com.smile.mypark.data.remote.dto.VerifyCodeRequestDto
 import com.smile.mypark.data.remote.service.SignService
@@ -23,6 +24,12 @@ class SignDataSource(
 
     override suspend fun verifyCode(dto: VerifyCodeRequestDto): CommonResponseDto =
         httpClient.post("api/v1/sms/verify") {
+            contentType(ContentType.Application.Json)
+            setBody(dto)
+        }.body()
+
+    override suspend fun register(dto: RegisterRequestDto): CommonResponseDto =
+        httpClient.post("api/v1/users/register") {
             contentType(ContentType.Application.Json)
             setBody(dto)
         }.body()

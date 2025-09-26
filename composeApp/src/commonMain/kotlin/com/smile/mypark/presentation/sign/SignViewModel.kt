@@ -2,6 +2,8 @@ package com.smile.mypark.presentation.sign
 
 import androidx.lifecycle.viewModelScope
 import com.smile.mypark.core.base.BaseViewModel
+import com.smile.mypark.domain.model.RegisterInfo
+import com.smile.mypark.domain.usecase.RegisterUseCase
 import com.smile.mypark.domain.usecase.SendVerificationCodeUseCase
 import com.smile.mypark.domain.usecase.VerifyCodeUseCase
 import com.smile.mypark.presentation.sign.SignContract.SideEffect.*
@@ -10,14 +12,15 @@ import kotlinx.coroutines.launch
 class SignViewModel (
     private val sendCode: SendVerificationCodeUseCase,
     private val verifyCode: VerifyCodeUseCase,
+    private val register: RegisterUseCase
 ) : BaseViewModel<SignContract.State, SignContract.SideEffect, SignContract.Event>(
     SignContract.State()
 ) {
     override fun handleEvents(event: SignContract.Event) {
         when (event) {
             SignContract.Event.ToggleAll -> toggleAll()
-            is SignContract.Event.ToggleRequired -> toggleRequired(event.index)
-            is SignContract.Event.ToggleOptional -> toggleOptional(event.index)
+            is SignContract.Event.ToggleRequired -> toggleRequired(event.key)
+            is SignContract.Event.ToggleOptional -> toggleOptional(event.key)
             SignContract.Event.ClickNext -> agreementNext()
             is SignContract.Event.ClickDetailRequired ->
                 sendEffect ({ ShowTermsDetail(SignContract.SideEffect.TermsType.REQUIRED, event.index) })
@@ -40,32 +43,34 @@ class SignViewModel (
             is SignContract.Event.PwChanged -> updateState { copy(password = event.pw) }
             is SignContract.Event.PwConfirmChanged -> updateState { copy(passwordConfirm = event.pw) }
             SignContract.Event.ClickPasswordNext -> passwordNext()
+
+            SignContract.Event.ClickRegister -> signUp()
         }
     }
+
 
     private fun toggleAll() {
         val newValue = !viewState.value.allChecked
         updateState {
             copy(
                 allChecked = newValue,
-                required = List(required.size) { newValue },
-                optional = List(optional.size) { newValue }
+                required = required.mapValues { newValue },
+                optional = optional.mapValues { newValue }
             )
         }
     }
 
-    private fun toggleRequired(index: Int) {
+    private fun toggleRequired(key: RequiredTerm) {
         val s = viewState.value
-        val req = s.required.toMutableList().apply { this[index] = !this[index] }
-        val allCheckedNow = req.all { it } && s.optional.all { it }
-        updateState { copy(required = req, allChecked = allCheckedNow) }
+        val updated = s.required.toMutableMap().apply { this[key] = !(this[key] ?: false) }
+        val all = updated.values.all { it } && s.optional.values.all { it }
+        updateState { copy(required = updated, allChecked = all) }
     }
-
-    private fun toggleOptional(index: Int) {
+    private fun toggleOptional(key: OptionalTerm) {
         val s = viewState.value
-        val opt = s.optional.toMutableList().apply { this[index] = !this[index] }
-        val allCheckedNow = s.required.all { it } && opt.all { it }
-        updateState { copy(optional = opt, allChecked = allCheckedNow) }
+        val updated = s.optional.toMutableMap().apply { this[key] = !(this[key] ?: false) }
+        val all = s.required.values.all { it } && updated.values.all { it }
+        updateState { copy(optional = updated, allChecked = all) }
     }
 
     private fun agreementNext() {
@@ -153,29 +158,29 @@ class SignViewModel (
             }
     }
 
-//    private fun signUp() = viewModelScope.launch {
-//        val s = viewState.value
-//        val req = SignUpRequest(
-//            uid = s.uid,
-//            password = s.password,
-//            nickname = s.nickname,
-//            consents = ConsentFlags(
-//                terms = s.required[0],
-//                privacy = s.required[1],
-//                location = s.required[2],
-//                thirdParty = s.required[3],
-//                marketing = s.optional.getOrNull(0) ?: false,
-//                sns = s.optional.getOrNull(1) ?: false,
-//                kakaoProfile = s.optional.getOrNull(2) ?: false
-//            )
-//        )
-//        runCatching {
-//            signRepository.signUp(req)
-//        }.onSuccess {
-//            sendEffect { SignContract.SideEffect.NavigateNext }
-//        }.onFailure {
-//            sendEffect { SignContract.SideEffect.Toast("회원가입 실패: ${it.message}") }
-//        }
-//    }
+    private fun signUp() = viewModelScope.launch {
+        val s = viewState.value
+        val isAgreePos   = s.required[RequiredTerm.LOCATION] == true && s.required[RequiredTerm.PRIVACY] == true
+        val isAgreeAlert = s.optional[OptionalTerm.MARKETING] == true
+
+        val info = RegisterInfo(
+            uid = s.uid.trim(),
+            password = s.password,
+            nickname = s.nickname.trim(),
+            isAgreePos = isAgreePos,
+            isAgreeAlert = isAgreeAlert
+        )
+
+        updateState { copy(registerLoading = true) }
+        runCatching { register(info) }
+            .onSuccess {
+                updateState { copy(registerLoading = false) }
+                sendEffect ({ SignContract.SideEffect.NavigateNext })
+            }
+            .onFailure { t ->
+                updateState { copy(registerLoading = false) }
+                sendEffect ({ SignContract.SideEffect.Toast(t.message ?: "회원가입 실패") })
+            }
+    }
 
 }

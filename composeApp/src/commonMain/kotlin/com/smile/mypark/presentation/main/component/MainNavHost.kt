@@ -128,7 +128,7 @@ internal fun MainNavHost(
 
                     SetNicknameRoute(
                         padding = padding,
-                        onClick = { navigator.navigateWelcome() },
+                        navigateNext = { navigator.navigateWelcome() },
                         viewModel = viewModel
                     )
                 }
