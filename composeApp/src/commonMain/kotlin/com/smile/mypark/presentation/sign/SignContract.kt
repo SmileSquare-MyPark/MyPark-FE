@@ -12,6 +12,9 @@ class SignContract {
         val optional: Map<OptionalTerm, Boolean> = OptionalTerm.entries.associateWith { false },
 
         val uid: String = "",
+        val uidX: Int? = null,
+        val socialProvider: SocialProvider? = null,
+
         val password: String = "",
         val passwordConfirm: String = "",
         val nickname: String = "",
@@ -20,7 +23,11 @@ class SignContract {
         val verificationCode: String = "",
         val phoneLoading: Boolean = false,
         val phoneVerified: Boolean = false,
-        val registerLoading: Boolean = false
+        val registerLoading: Boolean = false,
+
+        val signupLoading: Boolean = false,
+        val signupSucceeded: Boolean? = null,
+        val signupError: String? = null
     ) : ViewState {
         val isNextEnabled: Boolean get() = required.values.all { it }
         val isPasswordReady: Boolean get() = password.isNotBlank() && passwordConfirm.isNotBlank() && password == passwordConfirm
@@ -63,3 +70,4 @@ class SignContract {
 
 enum class RequiredTerm { UNIFIED, PRIVACY, LOCATION, THIRD_PARTY }
 enum class OptionalTerm { MARKETING, SNS, KAKAO_PROFILE }
+enum class SocialProvider { KAKAO, NAVER }

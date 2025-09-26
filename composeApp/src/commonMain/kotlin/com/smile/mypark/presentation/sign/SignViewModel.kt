@@ -33,8 +33,7 @@ class SignViewModel (
 
             is SignContract.Event.PhoneChanged -> updateState { copy(phoneNumber = event.v) }
             is SignContract.Event.CodeChanged  -> updateState { copy(verificationCode = event.v) }
-            SignContract.Event.ClickSendCode -> {
-                println("[VM] ClickSendCode received")
+            SignContract.Event.ClickSendCode -> { println("[VM] ClickSendCode received")
                 sendCode()
             }
             SignContract.Event.ClickPhoneNext  -> phoneNext()
@@ -158,29 +157,50 @@ class SignViewModel (
             }
     }
 
-    private fun signUp() = viewModelScope.launch {
+    private fun makeRegisterInfo(): RegisterInfo {
         val s = viewState.value
-        val isAgreePos   = s.required[RequiredTerm.LOCATION] == true && s.required[RequiredTerm.PRIVACY] == true
+
+        val uidFromPhone = s.phoneNumber.trim()
+        val hasUid  = uidFromPhone.isNotBlank()
+        val hasUidX = s.uidX != null
+
+        val kind = when {
+            hasUid -> "NORMAL"
+            hasUidX -> when (s.socialProvider) {
+                SocialProvider.KAKAO -> "KAKAO"
+                SocialProvider.NAVER -> "NAVER"
+                else -> "KAKAO"
+            }
+            else -> "NORMAL"
+        }
+
+        val isAgreePos   = s.required[RequiredTerm.LOCATION] == true
         val isAgreeAlert = s.optional[OptionalTerm.MARKETING] == true
 
-        val info = RegisterInfo(
-            uid = s.uid.trim(),
+        return RegisterInfo(
+            uid = if (hasUid) uidFromPhone else "",
             password = s.password,
             nickname = s.nickname.trim(),
+            uidX = if (hasUid) null else s.uidX,
+            kind = kind,
+            height = null,
+            weight = null,
+            age = null,
+            gender = null,
             isAgreePos = isAgreePos,
             isAgreeAlert = isAgreeAlert
         )
-
-        updateState { copy(registerLoading = true) }
-        runCatching { register(info) }
-            .onSuccess {
-                updateState { copy(registerLoading = false) }
-                sendEffect ({ SignContract.SideEffect.NavigateNext })
-            }
-            .onFailure { t ->
-                updateState { copy(registerLoading = false) }
-                sendEffect ({ SignContract.SideEffect.Toast(t.message ?: "회원가입 실패") })
-            }
     }
 
+    private fun signUp() = viewModelScope.launch {
+        val info = makeRegisterInfo()
+        updateState { copy(signupLoading = true, signupSucceeded = null, signupError = null) }
+        runCatching { register(info) }
+            .onSuccess {
+                updateState { copy(signupLoading = false, signupSucceeded = true, signupError = null) }
+            }
+            .onFailure { t ->
+                updateState { copy(signupLoading = false, signupSucceeded = false, signupError = t.message ?: "회원가입 실패") }
+            }
+    }
 }

@@ -142,7 +142,8 @@ internal fun MainNavHost(
                     WelcomeRoute(
                         padding = padding,
                         onClick = { navigator.navigateHomeNoStack() },
-                        viewModel = viewModel
+                        viewModel = viewModel,
+                        navigateToLogin = { navigator.navigateLogin() }
                     )
                 }
             }

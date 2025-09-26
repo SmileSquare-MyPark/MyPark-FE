@@ -2,6 +2,7 @@ package com.smile.mypark.presentation.sign
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -9,13 +10,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.mypark.core.ext.toFixedSp
 import com.smile.mypark.core.ui.component.Topbar
 import com.smile.mypark.core.ui.theme.Black
@@ -36,26 +41,32 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun WelcomeRoute(
     padding: PaddingValues,
     onClick: () -> Unit,
+    navigateToLogin: () -> Unit,
     viewModel: SignViewModel = koinViewModel()
-//    onClickDetail: () -> Unit,
-    //viewModel: SignViewModel = hiltViewModel()
 ) {
-    //val viewState by viewModel.viewState.collectAsStateWithLifecycle()
+    val state by viewModel.viewState.collectAsStateWithLifecycle()
 
-    WelcomeScreen(
-        padding = padding,
-        onClick = onClick
-        //viewState = viewState,
-        //onClickDetail = onClickDetail
-    )
+    LaunchedEffect(Unit) {
+        viewModel.setEvent(SignContract.Event.ClickRegister)
+    }
+
+    when {
+        state.signupLoading -> SignUpLoadingScreen(padding)
+        state.signupSucceeded == true -> WelcomeScreen(padding, onClick)
+        state.signupSucceeded == false -> SignUpFailedScreen(
+            padding = padding,
+            message = state.signupError ?: "회원가입 실패",
+            onRetry = navigateToLogin
+        )
+        else -> SignUpLoadingScreen(padding)
+    }
+
 }
 
 @Composable
 private fun WelcomeScreen(
     padding: PaddingValues,
     onClick: () -> Unit
-    //viewState: SignContract.SignViewState,
-    ///onClickDetail: () -> Unit,
 ) {
     Column(
         Modifier
@@ -115,13 +126,79 @@ private fun WelcomeScreen(
     }
 }
 
+@Composable
+private fun SignUpFailedScreen(
+    padding: PaddingValues,
+    message: String,
+    onRetry: () -> Unit
+) {
+    Column(
+        Modifier.fillMaxSize().background(White).padding(bottom = 120.dp, top = 60.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(Modifier.height(40.dp))
+        Text(
+            text = "회원가입에 실패했어요",
+            style = MaterialTheme.typography.headlineLarge.copy(
+                fontSize = 20.toFixedSp(),
+                lineHeight = 23.toFixedSp(),
+                color = Black
+            ),
+            textAlign = TextAlign.Center
+        )
+        Spacer(Modifier.height(16.dp))
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontSize = 14.toFixedSp(),
+                lineHeight = 16.toFixedSp(),
+                color = NeutralGray
+            ),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 40.dp)
+        )
+        Spacer(Modifier.weight(1f))
+        MyparkLoginButton(
+            text = "다시 시도",
+            onClick = onRetry,
+            modifier = Modifier.fillMaxWidth().height(50.dp).padding(horizontal = 40.dp),
+            enabled = true
+        )
+    }
+}
+
+@Composable
+private fun SignUpLoadingScreen(padding: PaddingValues) {
+    Box(
+        Modifier.fillMaxSize().background(White).padding(padding),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator()
+    }
+}
+
 @Preview
 @Composable
 private fun PreviewWelcome() {
     WelcomeScreen(
         padding = PaddingValues(),
         onClick = {  }
-//        viewState = SignContract.SignViewState(),
-//        onClickDetail = {}
+    )
+}
+@Preview
+@Composable
+private fun PreviewSignUpFailed() {
+    SignUpFailedScreen(
+        padding = PaddingValues(),
+        message = "회원가입 실패",
+        onRetry = {}
+    )
+}
+
+@Preview
+@Composable
+private fun PreviewSignUpLoading() {
+    SignUpLoadingScreen(
+        padding = PaddingValues()
     )
 }

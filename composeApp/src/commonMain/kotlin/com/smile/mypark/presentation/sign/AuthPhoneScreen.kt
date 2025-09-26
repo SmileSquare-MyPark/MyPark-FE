@@ -59,7 +59,7 @@ internal fun AuthPhoneRoute(
             when (eff) {
                 SignContract.SideEffect.NavigateNext -> navigateNext()
                 is SignContract.SideEffect.Toast -> {
-                    // 스낵바/토스트 표시
+
                 }
                 else -> Unit
             }
@@ -211,7 +211,7 @@ private fun AuthPhoneScreen(
         MyparkLoginButton(
             text = stringResource(Res.string.next),
             onClick = { onEvent(SignContract.Event.ClickPhoneNext) },
-            enabled = state.phoneVerified, // 인증 성공해야 다음
+            enabled = state.phoneVerified,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
