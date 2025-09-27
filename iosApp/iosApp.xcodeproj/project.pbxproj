@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		10362A312E87CD5600260CC6 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 10362A302E87CD5600260CC6 /* KakaoSDKAuth */; };
+		10362A332E87CD5600260CC6 /* KakaoSDKCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 10362A322E87CD5600260CC6 /* KakaoSDKCommon */; };
+		10362A352E87CD5600260CC6 /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = 10362A342E87CD5600260CC6 /* KakaoSDKUser */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		0140F28DD36817AEB26B816D /* MyPark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyPark.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -41,12 +47,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				10362A332E87CD5600260CC6 /* KakaoSDKCommon in Frameworks */,
+				10362A312E87CD5600260CC6 /* KakaoSDKAuth in Frameworks */,
+				10362A352E87CD5600260CC6 /* KakaoSDKUser in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		10362A2F2E87CD5600260CC6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		973415B765A4270129AC72A6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -60,6 +76,7 @@
 			children = (
 				0E39D548EBEB3BD0EA7DB84F /* Configuration */,
 				8DFC1924EE09038ED095B335 /* iosApp */,
+				10362A2F2E87CD5600260CC6 /* Frameworks */,
 				973415B765A4270129AC72A6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -85,6 +102,9 @@
 			);
 			name = iosApp;
 			packageProductDependencies = (
+				10362A302E87CD5600260CC6 /* KakaoSDKAuth */,
+				10362A322E87CD5600260CC6 /* KakaoSDKCommon */,
+				10362A342E87CD5600260CC6 /* KakaoSDKUser */,
 			);
 			productName = iosApp;
 			productReference = 0140F28DD36817AEB26B816D /* MyPark.app */;
@@ -189,6 +209,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				KakaoAppKey = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -276,6 +297,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				KakaoAppKey = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -384,6 +406,24 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		10362A302E87CD5600260CC6 /* KakaoSDKAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 10362A2C2E87B32200260CC6 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDKAuth;
+		};
+		10362A322E87CD5600260CC6 /* KakaoSDKCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 10362A2C2E87B32200260CC6 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDKCommon;
+		};
+		10362A342E87CD5600260CC6 /* KakaoSDKUser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 10362A2C2E87B32200260CC6 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDKUser;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 12E77932958A8C20E6E14818 /* Project object */;
 }

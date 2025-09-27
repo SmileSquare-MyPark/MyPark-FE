@@ -4,13 +4,20 @@
 //
 //  Created by 김기찬 on 9/27/25.
 //
+import UIKit
+import KakaoSDKCommon
+import KakaoSDKAuth
+import KakaoSDKUser
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
-        KakaoSDK.initSDK(appKey: "")
+        if let kakaoAppKey = Bundle.main.object(forInfoDictionaryKey: "KakaoAppKey") as? String {
+            KakaoSDK.initSDK(appKey: kakaoAppKey)
+        }
+
         return true
     }
 
