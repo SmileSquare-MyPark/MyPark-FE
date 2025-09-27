@@ -34,6 +34,9 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
             implementation(libs.ktor.client.okhttp)
+
+            implementation("com.kakao.sdk:v2-user:2.20.6")
+
         }
         commonMain.dependencies {
             implementation(compose.runtime)
