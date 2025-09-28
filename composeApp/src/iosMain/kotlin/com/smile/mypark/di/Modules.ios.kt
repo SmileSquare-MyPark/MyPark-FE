@@ -15,6 +15,7 @@ class IOSNetworkConfig(
 ) : NetworkConfig
 
 actual val platformModule = module {
+    single<NetworkConfig> { IOSNetworkConfig(baseUrl = "") }
     single<HttpClientEngine> { Darwin.create() }
     single<KakaoLoginGateway> { KakaoLoginGatewayIos() }
 }
