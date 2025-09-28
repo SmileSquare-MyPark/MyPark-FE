@@ -67,7 +67,8 @@ internal fun MainNavHost(
             composable<Route.Auth> {
                 AuthRoute(
                     padding = padding,
-                    navigateLogin = { navigator.navigateLogin() })
+                    navigateLogin = { navigator.navigateLogin() }
+                )
             }
 
             composable<Route.Login> {

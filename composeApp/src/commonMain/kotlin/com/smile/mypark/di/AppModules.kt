@@ -15,7 +15,6 @@ val appModule = module {
     viewModelOf(::QrViewModel)
     viewModelOf(::HomeViewModel)
     viewModelOf(::AuthViewModel)
-//    single { SignViewModel(get(), get())}
     viewModelOf(::SignViewModel)
 
 }

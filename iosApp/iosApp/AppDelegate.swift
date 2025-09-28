@@ -16,6 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         if let kakaoAppKey = Bundle.main.object(forInfoDictionaryKey: "KakaoAppKey") as? String {
             KakaoSDK.initSDK(appKey: kakaoAppKey)
+            KakaoIosStarter.setupObservers()
         }
 
         return true

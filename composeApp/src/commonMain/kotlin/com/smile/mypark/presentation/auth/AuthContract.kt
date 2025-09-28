@@ -11,6 +11,8 @@ class AuthContract {
         val autoLogin: Boolean = false,
         val autoIdLogin: Boolean = false,
         val loading: Boolean = false,
+        val isLoading: Boolean = false,
+        val token: String? = null,
         val error: String? = null
     ) : ViewState
 
@@ -22,6 +24,9 @@ class AuthContract {
         object ClickLogin : AuthEvent
         object ClickSignUp : AuthEvent
         object ClickFindIdPw : AuthEvent
+        data object ClickKakaoLogin : AuthEvent
+        data object ClickNaverLogin : AuthEvent
+
     }
 
     sealed interface AuthSideEffect : ViewSideEffect {

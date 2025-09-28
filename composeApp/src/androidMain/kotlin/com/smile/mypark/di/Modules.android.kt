@@ -1,8 +1,9 @@
 package com.smile.mypark.di
 
-import android.R.attr.level
 import android.content.Context
+import com.smile.mypark.KakaoLoginGatewayAndroid
 import com.smile.mypark.R
+import com.smile.mypark.presentation.auth.KakaoLoginGateway
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -12,7 +13,6 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.header
-import io.ktor.client.utils.EmptyContent.contentType
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
@@ -51,3 +51,7 @@ actual fun provideHttpClient(config: NetworkConfig): HttpClient =
             contentType(ContentType.Application.Json)
         }
     }
+
+val androidLoginModule = module {
+    single<KakaoLoginGateway> { KakaoLoginGatewayAndroid(androidContext()) }
+}

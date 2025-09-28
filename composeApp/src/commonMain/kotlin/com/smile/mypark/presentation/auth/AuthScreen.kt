@@ -17,10 +17,13 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.mypark.core.ext.toFixedSp
 import com.smile.mypark.core.ui.theme.NeutralGray
 import com.smile.mypark.presentation.auth.component.AuthSubtitle
@@ -34,34 +37,44 @@ import mypark.composeapp.generated.resources.login_comfortable
 import mypark.composeapp.generated.resources.login_main_title
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun AuthRoute(
     padding: PaddingValues,
     navigateLogin: () -> Unit,
-    onClickKakao: () -> Unit = {},
-    onClickNaver: () -> Unit = {},
-    //viewModel: AuthViewModel = hiltViewModel()
+    viewModel: AuthViewModel = koinViewModel()
 ) {
-    //val viewState by viewModel.viewState.collectAsStateWithLifecycle()
+    val state by viewModel.viewState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(viewModel) {
+        viewModel.effect.collect { eff ->
+            when (eff) {
+                is AuthContract.AuthSideEffect.Toast -> {
+                    println("[Auth] Toast: ${eff.msg}")
+                }
+                AuthContract.AuthSideEffect.NavigateFindIdPw -> { /* TODO */ }
+                AuthContract.AuthSideEffect.NavigateHome -> { /* TODO */ }
+                AuthContract.AuthSideEffect.NavigateSignup -> { /* TODO */ }
+            }
+        }
+    }
+
 
     AuthScreen(
         padding = padding,
-        //viewState = viewState,
-        //onClickDetail = onClickDetail
-        navigateLogin = navigateLogin,
-        onClickKakao = onClickKakao,
-        onClickNaver = onClickNaver
+        state = state,
+        onEvent = viewModel::setEvent,
+        navigateLogin = navigateLogin
     )
 }
 
 @Composable
 private fun AuthScreen(
     padding: PaddingValues,
-    //viewState: AuthContract.AuthViewState,
+    state: AuthContract.AuthState,
+    onEvent: (AuthContract.AuthEvent) -> Unit,
     navigateLogin: () -> Unit,
-    onClickKakao: () -> Unit,
-    onClickNaver: () -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -110,12 +123,13 @@ private fun AuthScreen(
             ) {
                 SocialCircleIcon(
                     bg = Color(0xFFFEE500),
-                    onClick = onClickKakao
+                    onClick = { onEvent(AuthContract.AuthEvent.ClickKakaoLogin) }
                 ) { Text("K", color = Color.Black) }
 
+                // Naver
                 SocialCircleIcon(
                     bg = Color(0xFF03C75A),
-                    onClick = onClickNaver
+                    onClick = { onEvent(AuthContract.AuthEvent.ClickNaverLogin) }
                 ) { Text("N", color = Color.White) }
             }
         }
@@ -135,9 +149,8 @@ private fun AuthScreen(
 private fun PreviewAuth() {
     AuthScreen(
         padding = PaddingValues(),
-//        viewState = AuthContract.AuthViewState(),
         navigateLogin = {},
-        onClickKakao = {},
-        onClickNaver = {}
+        onEvent = {},
+        state = AuthContract.AuthState()
     )
 }

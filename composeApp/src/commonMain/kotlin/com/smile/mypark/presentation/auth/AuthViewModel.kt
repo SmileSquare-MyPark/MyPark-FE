@@ -6,7 +6,8 @@ import com.smile.mypark.domain.usecase.LoginUseCase
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val kakao: KakaoLoginGateway
 ): BaseViewModel <AuthContract.AuthState, AuthContract.AuthSideEffect, AuthContract.AuthEvent>(
     AuthContract.AuthState()
 ) {
@@ -19,6 +20,8 @@ class AuthViewModel(
             AuthContract.AuthEvent.ClickLogin -> login()
             AuthContract.AuthEvent.ClickSignUp -> sendEffect ({ AuthContract.AuthSideEffect.NavigateSignup })
             AuthContract.AuthEvent.ClickFindIdPw -> sendEffect ({ AuthContract.AuthSideEffect.NavigateFindIdPw })
+            AuthContract.AuthEvent.ClickKakaoLogin -> loginWithKakao()
+            AuthContract.AuthEvent.ClickNaverLogin -> TODO()
         }
     }
 
@@ -44,4 +47,19 @@ class AuthViewModel(
                 sendEffect({ AuthContract.AuthSideEffect.Toast(t.message ?: "로그인 실패") })
             }
     }
+
+    private fun loginWithKakao() = viewModelScope.launch {
+        updateState { copy(isLoading = true, error = null) }
+        runCatching { kakao.login() }
+            .onSuccess { token ->
+                updateState { copy(isLoading = false, token = token) }
+                sendEffect ({ AuthContract.AuthSideEffect.Toast(msg = "카카오 로그인 성공") })
+                sendEffect ({ AuthContract.AuthSideEffect.NavigateHome })
+            }
+            .onFailure { e ->
+                updateState { copy(isLoading = false, error = e.message) }
+                sendEffect ({ AuthContract.AuthSideEffect.Toast("카카오 로그인 실패: ${e.message}") })
+            }
+    }
+
 }
