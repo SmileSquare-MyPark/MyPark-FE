@@ -1,4 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.io.FileInputStream
+import java.util.Properties
+import kotlin.apply
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -36,6 +39,7 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
 
             implementation("com.kakao.sdk:v2-user:2.20.6")
+            implementation("com.navercorp.nid:oauth:5.10.0")
 
         }
         commonMain.dependencies {
@@ -68,6 +72,10 @@ kotlin {
     }
 }
 
+val properties = Properties().apply{
+    load(FileInputStream(rootProject.file("local.properties")))
+}
+
 android {
     namespace = "com.smile.mypark"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -78,6 +86,10 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+
+        buildConfigField("String", "KAKAO_APP_KEY", "\"${properties["KAKAO_APP_KEY"]}\"")
+        buildConfigField("String", "NAVER_CLIENT_ID", "\"${properties["NAVER_CLIENT_ID"]}\"")
+        buildConfigField("String", "NAVER_CLIENT_SECRET", "\"${properties["NAVER_CLIENT_SECRET"]}\"")
     }
     packaging {
         resources {
@@ -85,13 +97,31 @@ android {
         }
     }
     buildTypes {
-        getByName("release") {
+        debug {
             isMinifyEnabled = false
+
+            manifestPlaceholders["NAVER_CLIENT_ID"] = properties["NAVER_CLIENT_ID"] as String
+            manifestPlaceholders["KAKAO_APP_KEY"]   = properties["KAKAO_APP_KEY"] as String
+        }
+
+        release {
+            isMinifyEnabled = false
+
+            manifestPlaceholders["NAVER_CLIENT_ID"] = properties["NAVER_CLIENT_ID"] as String
+            manifestPlaceholders["KAKAO_APP_KEY"]   = properties["KAKAO_APP_KEY"] as String
+
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+    buildFeatures {
+        buildConfig = true
     }
 }
 

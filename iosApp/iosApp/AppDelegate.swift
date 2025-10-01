@@ -8,6 +8,7 @@ import UIKit
 import KakaoSDKCommon
 import KakaoSDKAuth
 import KakaoSDKUser
+import NidThirdPartyLogin
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(
@@ -18,7 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             KakaoSDK.initSDK(appKey: kakaoAppKey)
             KakaoIosStarter.setupObservers()
         }
-
+        NidOAuth.shared.initialize()
+        NaverIosStarter.setupObservers()
         return true
     }
 
@@ -26,6 +28,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                      options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         if (AuthApi.isKakaoTalkLoginUrl(url)) {
             return AuthController.handleOpenUrl(url: url)
+        }
+        if NidOAuth.shared.handleURL(url) {
+            return true
         }
         return false
     }

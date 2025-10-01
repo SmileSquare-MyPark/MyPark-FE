@@ -1,7 +1,9 @@
 package com.smile.mypark.di
 
 import com.smile.mypark.KakaoLoginGatewayIos
+import com.smile.mypark.NaverLoginGatewayIos
 import com.smile.mypark.presentation.auth.KakaoLoginGateway
+import com.smile.mypark.presentation.auth.NaverLoginGateway
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.darwin.Darwin
@@ -18,6 +20,7 @@ actual val platformModule = module {
     single<NetworkConfig> { IOSNetworkConfig(baseUrl = "") }
     single<HttpClientEngine> { Darwin.create() }
     single<KakaoLoginGateway> { KakaoLoginGatewayIos() }
+    single<NaverLoginGateway> { NaverLoginGatewayIos() }
 }
 
 actual fun provideHttpClient(config: NetworkConfig): HttpClient =

@@ -7,7 +7,8 @@ import kotlinx.coroutines.launch
 
 class AuthViewModel(
     private val loginUseCase: LoginUseCase,
-    private val kakao: KakaoLoginGateway
+    private val kakaoGateway: KakaoLoginGateway,
+    private val naverGateway: NaverLoginGateway
 ): BaseViewModel <AuthContract.AuthState, AuthContract.AuthSideEffect, AuthContract.AuthEvent>(
     AuthContract.AuthState()
 ) {
@@ -21,7 +22,7 @@ class AuthViewModel(
             AuthContract.AuthEvent.ClickSignUp -> sendEffect ({ AuthContract.AuthSideEffect.NavigateSignup })
             AuthContract.AuthEvent.ClickFindIdPw -> sendEffect ({ AuthContract.AuthSideEffect.NavigateFindIdPw })
             AuthContract.AuthEvent.ClickKakaoLogin -> loginWithKakao()
-            AuthContract.AuthEvent.ClickNaverLogin -> TODO()
+            AuthContract.AuthEvent.ClickNaverLogin -> loginNaver()
         }
     }
 
@@ -50,7 +51,7 @@ class AuthViewModel(
 
     private fun loginWithKakao() = viewModelScope.launch {
         updateState { copy(isLoading = true, error = null) }
-        runCatching { kakao.login() }
+        runCatching { kakaoGateway.login() }
             .onSuccess { token ->
                 updateState { copy(isLoading = false, token = token) }
                 sendEffect ({ AuthContract.AuthSideEffect.Toast(msg = "카카오 로그인 성공") })
@@ -62,4 +63,16 @@ class AuthViewModel(
             }
     }
 
+    private fun loginNaver() = viewModelScope.launch {
+        updateState { copy(isLoading = true, error = null) }
+        runCatching { naverGateway.login() }
+            .onSuccess { accessToken ->
+                updateState { copy(isLoading = false, token = accessToken) }
+                sendEffect ({ AuthContract.AuthSideEffect.NavigateHome })
+            }
+            .onFailure { e ->
+                updateState { copy(isLoading = false, error = e.message) }
+                sendEffect ({ AuthContract.AuthSideEffect.Toast(e.message ?: "네이버 로그인 실패") })
+            }
+    }
 }

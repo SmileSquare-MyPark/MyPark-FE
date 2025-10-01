@@ -1,9 +1,12 @@
 package com.smile.mypark.di
 
+import android.app.Activity
 import android.content.Context
 import com.smile.mypark.KakaoLoginGatewayAndroid
+import com.smile.mypark.NaverLoginGatewayAndroid
 import com.smile.mypark.R
 import com.smile.mypark.presentation.auth.KakaoLoginGateway
+import com.smile.mypark.presentation.auth.NaverLoginGateway
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -54,4 +57,5 @@ actual fun provideHttpClient(config: NetworkConfig): HttpClient =
 
 val androidLoginModule = module {
     single<KakaoLoginGateway> { KakaoLoginGatewayAndroid(androidContext()) }
+    single<NaverLoginGateway> { NaverLoginGatewayAndroid(androidContext()) }
 }

@@ -10,6 +10,7 @@
 		10362A312E87CD5600260CC6 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 10362A302E87CD5600260CC6 /* KakaoSDKAuth */; };
 		10362A332E87CD5600260CC6 /* KakaoSDKCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 10362A322E87CD5600260CC6 /* KakaoSDKCommon */; };
 		10362A352E87CD5600260CC6 /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = 10362A342E87CD5600260CC6 /* KakaoSDKUser */; };
+		10CD84552E8C38EA0078124A /* NidThirdPartyLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 10CD84542E8C38EA0078124A /* NidThirdPartyLogin */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				10362A332E87CD5600260CC6 /* KakaoSDKCommon in Frameworks */,
+				10CD84552E8C38EA0078124A /* NidThirdPartyLogin in Frameworks */,
 				10362A312E87CD5600260CC6 /* KakaoSDKAuth in Frameworks */,
 				10362A352E87CD5600260CC6 /* KakaoSDKUser in Frameworks */,
 			);
@@ -105,6 +107,7 @@
 				10362A302E87CD5600260CC6 /* KakaoSDKAuth */,
 				10362A322E87CD5600260CC6 /* KakaoSDKCommon */,
 				10362A342E87CD5600260CC6 /* KakaoSDKUser */,
+				10CD84542E8C38EA0078124A /* NidThirdPartyLogin */,
 			);
 			productName = iosApp;
 			productReference = 0140F28DD36817AEB26B816D /* MyPark.app */;
@@ -136,6 +139,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				10362A2C2E87B32200260CC6 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
+				10CD84532E8C38EA0078124A /* XCRemoteSwiftPackageReference "naveridlogin-sdk-ios-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 973415B765A4270129AC72A6 /* Products */;
@@ -214,6 +218,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				NidClientID = "";
+				NidClientSecret = "";
+				NidUrlScheme = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -302,6 +309,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				NidClientID = "";
+				NidClientSecret = "";
+				NidUrlScheme = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -405,6 +415,14 @@
 				minimumVersion = 2.24.6;
 			};
 		};
+		10CD84532E8C38EA0078124A /* XCRemoteSwiftPackageReference "naveridlogin-sdk-ios-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/naver/naveridlogin-sdk-ios-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -422,6 +440,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 10362A2C2E87B32200260CC6 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
 			productName = KakaoSDKUser;
+		};
+		10CD84542E8C38EA0078124A /* NidThirdPartyLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 10CD84532E8C38EA0078124A /* XCRemoteSwiftPackageReference "naveridlogin-sdk-ios-swift" */;
+			productName = NidThirdPartyLogin;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
