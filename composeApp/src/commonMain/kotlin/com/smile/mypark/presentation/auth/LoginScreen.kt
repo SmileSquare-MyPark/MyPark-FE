@@ -31,6 +31,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.smile.mypark.core.ext.keyboardHide
 import com.smile.mypark.core.ext.noRippleSingleClickable
 import com.smile.mypark.core.ext.toFixedSp
 import com.smile.mypark.core.ui.component.CustomRadioButton
@@ -92,6 +93,7 @@ private fun LoginScreen(
             .fillMaxSize()
             .padding(padding)
             .windowInsetsPadding(WindowInsets.systemBars)
+            .keyboardHide()
     ) {
         Column(
             modifier = Modifier

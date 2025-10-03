@@ -23,6 +23,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.smile.mypark.core.ext.keyboardHide
 import com.smile.mypark.core.ext.toFixedSp
 import com.smile.mypark.core.ui.component.Topbar
 import com.smile.mypark.core.ui.theme.Black
@@ -76,7 +77,8 @@ private fun SetNicknameScreen(
         Modifier
             .fillMaxSize()
             .background(White)
-            .padding(bottom = 120.dp, top = 60.dp),
+            .padding(bottom = 120.dp, top = 60.dp)
+            .keyboardHide(),
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {

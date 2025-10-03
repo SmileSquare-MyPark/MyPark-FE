@@ -1,12 +1,16 @@
 package com.smile.mypark.core.ext
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -83,4 +87,16 @@ fun <T> singleClickEvent(
     }
 
     return result
+}
+
+fun Modifier.keyboardHide(): Modifier = composed {
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    pointerInput(Unit) {
+        detectTapGestures(onTap = {
+            focusManager.clearFocus(force = true)
+            keyboardController?.hide()
+        })
+    }
 }
