@@ -3,6 +3,7 @@ package com.smile.mypark.presentation.auth
 import com.smile.mypark.core.base.ViewEvent
 import com.smile.mypark.core.base.ViewSideEffect
 import com.smile.mypark.core.base.ViewState
+import com.smile.mypark.domain.model.SignStartArgs
 
 class AuthContract {
     data class AuthState(
@@ -31,7 +32,7 @@ class AuthContract {
 
     sealed interface AuthSideEffect : ViewSideEffect {
         object NavigateHome : AuthSideEffect
-        object NavigateSignup : AuthSideEffect
+        data class NavigateSignup(val args: SignStartArgs? = null) : AuthSideEffect
         object NavigateFindIdPw : AuthSideEffect
         data class Toast(val msg: String) : AuthSideEffect
     }

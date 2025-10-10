@@ -54,7 +54,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun AgreementRoute(
     padding: PaddingValues,
-    navigateNext: () -> Unit,
+    navigateNext: (SignStep) -> Unit,
     viewModel: SignViewModel = koinViewModel()
 ) {
     val state by viewModel.viewState.collectAsStateWithLifecycle()
@@ -62,7 +62,7 @@ internal fun AgreementRoute(
     LaunchedEffect(viewModel) {
         viewModel.effect.collect { eff ->
             when (eff) {
-                SignContract.SideEffect.NavigateNext -> navigateNext()
+                is SignContract.SideEffect.NavigateNext -> navigateNext(eff.step)
                 is SignContract.SideEffect.ShowTermsDetail -> {
                     // 약관 상세 화면
                 }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
@@ -31,7 +32,9 @@ import com.smile.mypark.presentation.sign.AgreementRoute
 import com.smile.mypark.presentation.sign.AuthPhoneRoute
 import com.smile.mypark.presentation.sign.SetNicknameRoute
 import com.smile.mypark.presentation.sign.SetPasswordRoute
+import com.smile.mypark.presentation.sign.SignStep
 import com.smile.mypark.presentation.sign.SignViewModel
+import com.smile.mypark.presentation.sign.SignupStash
 import com.smile.mypark.presentation.sign.WelcomeRoute
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -67,7 +70,12 @@ internal fun MainNavHost(
             composable<Route.Auth> {
                 AuthRoute(
                     padding = padding,
-                    navigateLogin = { navigator.navigateLogin() }
+                    navigateLogin = { navigator.navigateLogin() },
+                    navigateHome  = { navigator.navigateHomeNoStack() },
+                    navigateSignup = { args ->
+                        SignupStash.args = args
+                        navigator.navigateSign()
+                    }
                 )
             }
 
@@ -88,9 +96,23 @@ internal fun MainNavHost(
                     }
                     val viewModel: SignViewModel = koinViewModel(viewModelStoreOwner = signupOwner)
 
+                    LaunchedEffect(Unit) {
+                        val args = SignupStash.consume()
+                        if (args != null) viewModel.prepareSignup(args)
+                        else viewModel.resetSocial()
+                    }
+
                     AgreementRoute(
                         padding = padding,
-                        navigateNext = { navigator.navigatePhone() },
+                        navigateNext = { step ->
+                            when (step) {
+                                SignStep.PHONE     -> navigator.navigatePhone()
+                                SignStep.PASSWORD  -> navigator.navigatePassword()
+                                SignStep.NICKNAME  -> navigator.navigateNickname()
+                                SignStep.WELCOME   -> navigator.navigateWelcome()
+                                else               -> Unit
+                            }
+                        },
                         viewModel = viewModel
                     )
                 }
@@ -103,7 +125,14 @@ internal fun MainNavHost(
 
                     AuthPhoneRoute(
                         padding = padding,
-                        navigateNext = { navigator.navigatePassword() },
+                        navigateNext = { step ->
+                            when (step) {
+                                SignStep.PASSWORD  -> navigator.navigatePassword()
+                                SignStep.NICKNAME  -> navigator.navigateNickname()
+                                SignStep.WELCOME   -> navigator.navigateWelcome()
+                                else               -> Unit
+                            }
+                        },
                         viewModel = viewModel
                     )
                 }
@@ -116,7 +145,13 @@ internal fun MainNavHost(
 
                     SetPasswordRoute(
                         padding = padding,
-                        onClick = { navigator.navigateNickname() },
+                        navigateNext = { step ->
+                            when (step) {
+                                SignStep.NICKNAME  -> navigator.navigateNickname()
+                                SignStep.WELCOME   -> navigator.navigateWelcome()
+                                else               -> Unit
+                            }
+                        },
                         viewModel = viewModel
                     )
                 }
@@ -129,7 +164,12 @@ internal fun MainNavHost(
 
                     SetNicknameRoute(
                         padding = padding,
-                        navigateNext = { navigator.navigateWelcome() },
+                        navigateNext = { step ->
+                            when (step) {
+                                SignStep.WELCOME -> navigator.navigateWelcome()
+                                else             -> Unit
+                            }
+                        },
                         viewModel = viewModel
                     )
                 }
@@ -144,7 +184,7 @@ internal fun MainNavHost(
                         padding = padding,
                         onClick = { navigator.navigateHomeNoStack() },
                         viewModel = viewModel,
-                        navigateToLogin = { navigator.navigateLogin() }
+                        navigateToAuth = { navigator.navigateAuth() }
                     )
                 }
             }

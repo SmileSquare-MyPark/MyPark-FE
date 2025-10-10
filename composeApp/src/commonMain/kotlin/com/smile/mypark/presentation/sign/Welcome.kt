@@ -41,7 +41,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun WelcomeRoute(
     padding: PaddingValues,
     onClick: () -> Unit,
-    navigateToLogin: () -> Unit,
+    navigateToAuth: () -> Unit,
     viewModel: SignViewModel = koinViewModel()
 ) {
     val state by viewModel.viewState.collectAsStateWithLifecycle()
@@ -56,7 +56,7 @@ internal fun WelcomeRoute(
         state.signupSucceeded == false -> SignUpFailedScreen(
             padding = padding,
             message = state.signupError ?: "회원가입 실패",
-            onRetry = navigateToLogin
+            onRetry = navigateToAuth
         )
         else -> SignUpLoadingScreen(padding)
     }

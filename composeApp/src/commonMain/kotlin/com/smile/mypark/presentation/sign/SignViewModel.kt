@@ -3,6 +3,7 @@ package com.smile.mypark.presentation.sign
 import androidx.lifecycle.viewModelScope
 import com.smile.mypark.core.base.BaseViewModel
 import com.smile.mypark.domain.model.RegisterInfo
+import com.smile.mypark.domain.model.SignStartArgs
 import com.smile.mypark.domain.usecase.RegisterUseCase
 import com.smile.mypark.domain.usecase.SendVerificationCodeUseCase
 import com.smile.mypark.domain.usecase.VerifyCodeUseCase
@@ -74,17 +75,23 @@ class SignViewModel (
 
     private fun agreementNext() {
         val s = viewState.value
-        if (s.isNextEnabled) {
-            sendEffect ({ SignContract.SideEffect.NavigateNext })
-        } else {
+        if (!s.isNextEnabled) {
             sendEffect ({ SignContract.SideEffect.Toast("필수 약관에 동의해 주세요.") })
+            return
+        }
+        if (s.isSocial) {
+            // ★ 소셜 로그인: 동의 → 바로 닉네임
+            sendEffect ({ SignContract.SideEffect.NavigateNext(SignStep.NICKNAME) })
+        } else {
+            // 일반: 동의 → 휴대폰 인증
+            sendEffect ({ SignContract.SideEffect.NavigateNext(SignStep.PHONE) })
         }
     }
 
     private fun phoneNext() {
         val s = viewState.value
         if (s.phoneVerified) {
-            sendEffect ({ SignContract.SideEffect.NavigateNext })
+            sendEffect ({ SignContract.SideEffect.NavigateNext(SignStep.PASSWORD) })
         } else {
             sendEffect ({ SignContract.SideEffect.Toast("휴대폰 인증을 완료해 주세요.") })
         }
@@ -93,7 +100,7 @@ class SignViewModel (
     private fun passwordNext() {
         val s = viewState.value
         if (s.isPasswordReady) {
-            sendEffect ({ SignContract.SideEffect.NavigateNext })
+            sendEffect ({ SignContract.SideEffect.NavigateNext(SignStep.NICKNAME) })
         } else {
             val msg = when {
                 s.password.isBlank() || s.passwordConfirm.isBlank() -> "비밀번호를 입력해 주세요."
@@ -109,7 +116,7 @@ class SignViewModel (
     private fun onNicknameNext() {
         val s = viewState.value
         if (s.isNicknameReady) {
-            sendEffect ({ SignContract.SideEffect.NavigateNext })
+            sendEffect ({ SignContract.SideEffect.NavigateNext(SignStep.WELCOME) })
         } else {
             sendEffect ({ SignContract.SideEffect.Toast("닉네임을 확인해 주세요.") })
         }
@@ -162,16 +169,13 @@ class SignViewModel (
 
         val uidFromPhone = s.phoneNumber.trim()
         val hasUid  = uidFromPhone.isNotBlank()
-        val hasUidX = s.uidX != null
+        val hasUidX = !s.uidX.isNullOrBlank()
+        val isSocial = s.socialProvider != null && hasUidX
 
-        val kind = when {
-            hasUid -> "NORMAL"
-            hasUidX -> when (s.socialProvider) {
-                SocialProvider.KAKAO -> "KAKAO"
-                SocialProvider.NAVER -> "NAVER"
-                else -> "KAKAO"
-            }
-            else -> "NORMAL"
+        val kind = when (s.socialProvider) {
+            SocialProvider.NAVER -> "NAVER"
+            SocialProvider.KAKAO -> "KAKAO"
+            null -> "NORMAL"
         }
 
         val isAgreePos   = s.required[RequiredTerm.LOCATION] == true
@@ -179,7 +183,7 @@ class SignViewModel (
 
         return RegisterInfo(
             uid = if (hasUid) uidFromPhone else "",
-            password = s.password,
+            password = if (isSocial) null else s.password,
             nickname = s.nickname.trim(),
             uidX = if (hasUid) null else s.uidX,
             kind = kind,
@@ -194,13 +198,35 @@ class SignViewModel (
 
     private fun signUp() = viewModelScope.launch {
         val info = makeRegisterInfo()
+        println(
+            "[SignUp] start " +
+                    "kind=${info.kind}, " +
+                    "uid=${info.uid?.takeIf { it.isNotBlank() } ?: "(none)"}, " +
+                    "uidX=${info.uidX ?: "(none)"}, " +
+                    "nickname=${info.nickname}, "
+        )
         updateState { copy(signupLoading = true, signupSucceeded = null, signupError = null) }
         runCatching { register(info) }
             .onSuccess {
+                println("[SignUp] SUCCESS kind=${info.kind}, uid=${info.uid ?: "(none)"}, uidX=${info.uidX ?: "(none)"}")
                 updateState { copy(signupLoading = false, signupSucceeded = true, signupError = null) }
             }
             .onFailure { t ->
+                println("[SignUp] FAIL   reason=${t.message ?: "unknown"}, kind=${info.kind}, uid=${info.uid ?: "(none)"}, uidX=${info.uidX ?: "(none)"}")
                 updateState { copy(signupLoading = false, signupSucceeded = false, signupError = t.message ?: "회원가입 실패") }
             }
+    }
+
+    fun prepareSignup(args: SignStartArgs) {
+        updateState {
+            copy(
+                socialProvider = args.provider,
+                uidX = args.providerUserId
+            )
+        }
+    }
+
+    fun resetSocial() {
+        updateState { copy(socialProvider = null, uidX = null) }
     }
 }

@@ -45,7 +45,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun SetNicknameRoute(
     padding: PaddingValues,
-    navigateNext: () -> Unit,
+    navigateNext: (SignStep) -> Unit,
     viewModel: SignViewModel = koinViewModel()
 ) {
     val state by viewModel.viewState.collectAsStateWithLifecycle()
@@ -53,7 +53,7 @@ internal fun SetNicknameRoute(
     LaunchedEffect(viewModel) {
         viewModel.effect.collect { eff ->
             when (eff) {
-                SignContract.SideEffect.NavigateNext -> navigateNext()
+                is SignContract.SideEffect.NavigateNext -> navigateNext(eff.step)
                 is SignContract.SideEffect.Toast -> { /* 스낵바/토스트 */ }
                 else -> Unit
             }

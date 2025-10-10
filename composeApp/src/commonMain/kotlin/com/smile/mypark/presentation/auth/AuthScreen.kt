@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.mypark.core.ext.toFixedSp
 import com.smile.mypark.core.ui.theme.NeutralGray
+import com.smile.mypark.domain.model.SignStartArgs
 import com.smile.mypark.presentation.auth.component.AuthSubtitle
 import com.smile.mypark.presentation.auth.component.MyParkLogo
 import com.smile.mypark.presentation.auth.component.MyparkLoginButton
@@ -43,19 +44,19 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun AuthRoute(
     padding: PaddingValues,
     navigateLogin: () -> Unit,
+    navigateSignup: (SignStartArgs?) -> Unit,
+    navigateHome: () -> Unit,
     viewModel: AuthViewModel = koinViewModel()
 ) {
     val state by viewModel.viewState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(viewModel) {
+    LaunchedEffect(Unit) {
         viewModel.effect.collect { eff ->
             when (eff) {
-                is AuthContract.AuthSideEffect.Toast -> {
-                    println("[Auth] Toast: ${eff.msg}")
-                }
+                is AuthContract.AuthSideEffect.Toast -> { println("[Auth] Toast: ${eff.msg}") }
                 AuthContract.AuthSideEffect.NavigateFindIdPw -> { /* TODO */ }
-                AuthContract.AuthSideEffect.NavigateHome -> { /* TODO */ }
-                AuthContract.AuthSideEffect.NavigateSignup -> { /* TODO */ }
+                AuthContract.AuthSideEffect.NavigateHome -> { navigateHome() }
+                is AuthContract.AuthSideEffect.NavigateSignup -> navigateSignup(eff.args)
             }
         }
     }
@@ -126,7 +127,6 @@ private fun AuthScreen(
                     onClick = { onEvent(AuthContract.AuthEvent.ClickKakaoLogin) }
                 ) { Text("K", color = Color.Black) }
 
-                // Naver
                 SocialCircleIcon(
                     bg = Color(0xFF03C75A),
                     onClick = { onEvent(AuthContract.AuthEvent.ClickNaverLogin) }

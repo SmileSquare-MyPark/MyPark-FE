@@ -12,7 +12,7 @@ class SignContract {
         val optional: Map<OptionalTerm, Boolean> = OptionalTerm.entries.associateWith { false },
 
         val uid: String = "",
-        val uidX: Int? = null,
+        val uidX: String? = null,
         val socialProvider: SocialProvider? = null,
 
         val password: String = "",
@@ -32,6 +32,7 @@ class SignContract {
         val isNextEnabled: Boolean get() = required.values.all { it }
         val isPasswordReady: Boolean get() = password.isNotBlank() && passwordConfirm.isNotBlank() && password == passwordConfirm
         val isNicknameReady: Boolean get() = nickname.isNotBlank()
+        val isSocial: Boolean get() = uidX != null
     }
 
     sealed interface Event : ViewEvent {
@@ -61,7 +62,7 @@ class SignContract {
     }
 
     sealed interface SideEffect : ViewSideEffect {
-        data object NavigateNext : SideEffect
+        data class NavigateNext(val step: SignStep) : SideEffect
         data class ShowTermsDetail(val type: TermsType, val index: Int) : SideEffect
         enum class TermsType { REQUIRED, OPTIONAL }
         data class Toast(val msg: String) : SideEffect
@@ -71,3 +72,4 @@ class SignContract {
 enum class RequiredTerm { UNIFIED, PRIVACY, LOCATION, THIRD_PARTY }
 enum class OptionalTerm { MARKETING, SNS, KAKAO_PROFILE }
 enum class SocialProvider { KAKAO, NAVER }
+enum class SignStep { AGREEMENT, PHONE, PASSWORD, NICKNAME, WELCOME }

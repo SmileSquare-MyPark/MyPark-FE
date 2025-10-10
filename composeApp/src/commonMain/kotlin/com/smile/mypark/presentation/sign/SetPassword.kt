@@ -48,15 +48,21 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun SetPasswordRoute(
     padding: PaddingValues,
-    onClick: () -> Unit,
+    navigateNext: (SignStep) -> Unit,
     viewModel: SignViewModel = koinViewModel()
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
 
+    LaunchedEffect(viewState.isSocial) {
+        if (viewState.isSocial) {
+            navigateNext(SignStep.NICKNAME)
+        }
+    }
+
     LaunchedEffect(viewModel) {
         viewModel.effect.collect { eff ->
             when (eff) {
-                SignContract.SideEffect.NavigateNext -> onClick()
+                is SignContract.SideEffect.NavigateNext -> navigateNext(eff.step)
                 is SignContract.SideEffect.Toast -> {
                     // 스낵바/토스트 표시
                 }

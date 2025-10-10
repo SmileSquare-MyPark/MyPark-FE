@@ -29,7 +29,7 @@ data class RegisterRequestDto(
     val uid: String? = null,
     val password: String? = null,
     val nickname: String,
-    val uidX: Int? = null,
+    val uidX: String? = null,
     val kind: String? = null,
     val height: Int? = null,
     val weight: Int? = null,

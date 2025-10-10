@@ -2,13 +2,18 @@ package com.smile.mypark.presentation.auth
 
 import androidx.lifecycle.viewModelScope
 import com.smile.mypark.core.base.BaseViewModel
+import com.smile.mypark.domain.error.NotMemberException
+import com.smile.mypark.domain.model.SignStartArgs
+import com.smile.mypark.domain.repository.NaverLoginRepository
 import com.smile.mypark.domain.usecase.LoginUseCase
+import com.smile.mypark.presentation.sign.SocialProvider
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
     private val loginUseCase: LoginUseCase,
     private val kakaoGateway: KakaoLoginGateway,
-    private val naverGateway: NaverLoginGateway
+    private val naverGateway: NaverLoginGateway,
+    private val naverProfileRepo: NaverLoginRepository
 ): BaseViewModel <AuthContract.AuthState, AuthContract.AuthSideEffect, AuthContract.AuthEvent>(
     AuthContract.AuthState()
 ) {
@@ -19,7 +24,7 @@ class AuthViewModel(
             AuthContract.AuthEvent.ToggleAutoLogin -> updateState { copy(autoLogin = !autoLogin) }
             AuthContract.AuthEvent.ToggleAutoIdLogin -> updateState { copy(autoIdLogin = !autoIdLogin) }
             AuthContract.AuthEvent.ClickLogin -> login()
-            AuthContract.AuthEvent.ClickSignUp -> sendEffect ({ AuthContract.AuthSideEffect.NavigateSignup })
+            AuthContract.AuthEvent.ClickSignUp -> sendEffect ({ AuthContract.AuthSideEffect.NavigateSignup() })
             AuthContract.AuthEvent.ClickFindIdPw -> sendEffect ({ AuthContract.AuthSideEffect.NavigateFindIdPw })
             AuthContract.AuthEvent.ClickKakaoLogin -> loginWithKakao()
             AuthContract.AuthEvent.ClickNaverLogin -> loginNaver()
@@ -38,7 +43,8 @@ class AuthViewModel(
         updateState { copy(loading = true, error = null) }
 
         runCatching { loginUseCase(s.id, s.pw) }
-            .onSuccess {
+            .onSuccess { t ->
+                println("[Login] success id=${s.id} success=${t.accessToken}")
                 updateState { copy(loading = false, pw = "") }
                 sendEffect({ AuthContract.AuthSideEffect.NavigateHome })
             }
@@ -65,14 +71,49 @@ class AuthViewModel(
 
     private fun loginNaver() = viewModelScope.launch {
         updateState { copy(isLoading = true, error = null) }
-        runCatching { naverGateway.login() }
-            .onSuccess { accessToken ->
-                updateState { copy(isLoading = false, token = accessToken) }
+
+        var lastNaverId: String? = null
+
+        runCatching {
+            val accessToken = naverGateway.login()
+            val naverId = naverProfileRepo.fetchUserId(accessToken)
+            lastNaverId = naverId
+
+            println("[Naver] fetched id=$naverId")
+
+            println("[Naver] about to call loginUseCase id=$naverId")
+            val tokens = loginUseCase(naverId, "")
+            println("[Naver] loginUseCase OK id=$naverId")   // 성공시에만 찍힘
+
+            tokens
+        }
+            .onSuccess {
+                updateState { copy(isLoading = false, token = null) }
                 sendEffect ({ AuthContract.AuthSideEffect.NavigateHome })
             }
             .onFailure { e ->
                 updateState { copy(isLoading = false, error = e.message) }
-                sendEffect ({ AuthContract.AuthSideEffect.Toast(e.message ?: "네이버 로그인 실패") })
+                when (e) {
+                    is NotMemberException -> {
+                        val nid = lastNaverId
+                        if (nid.isNullOrBlank()) {
+                            println("[Auth] NotMember but naverId missing")
+                            sendEffect ({ AuthContract.AuthSideEffect.Toast("회원가입을 다시 시도해 주세요.") })
+                            return@onFailure
+                        }
+                        val args = SignStartArgs(
+                            provider = SocialProvider.NAVER,
+                            providerUserId = nid,
+                        )
+                        println("[Auth] NotMember(Naver) → navigate signup")
+                        sendEffect ({ AuthContract.AuthSideEffect.NavigateSignup(args) })
+                    }
+                    else -> {
+                        println("[Naver] loginUseCase FAILED: ${e.message}")
+                        sendEffect ({ AuthContract.AuthSideEffect.Toast(e.message ?: "네이버 로그인 실패") })
+                    }
+                }
             }
     }
+
 }

@@ -62,11 +62,11 @@ internal fun LoginRoute(
 ) {
     val state by viewModel.viewState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(viewModel) {
+    LaunchedEffect(Unit) {
         viewModel.effect.collect { eff ->
             when (eff) {
                 AuthContract.AuthSideEffect.NavigateHome -> navigateToHome()
-                AuthContract.AuthSideEffect.NavigateSignup -> navigateToSignUp()
+                is AuthContract.AuthSideEffect.NavigateSignup -> navigateToSignUp()
                 AuthContract.AuthSideEffect.NavigateFindIdPw -> navigateToFindIdPw()
                 is AuthContract.AuthSideEffect.Toast -> { /* show toast */ }
             }
