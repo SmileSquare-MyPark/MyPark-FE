@@ -7,10 +7,13 @@ sealed interface Route {
     data object Splash : Route
 
     @Serializable
-    data object Login : Route
+    data object Auth : Route
 
     @Serializable
-    data object Signup : Route
+    data object Login : Route
+
+//    @Serializable
+//    data object Signup : Route
 
     @Serializable
     data object QR : Route
@@ -31,4 +34,25 @@ sealed interface MainTabRoute : Route {
 
     @Serializable
     data object My : MainTabRoute
+}
+
+@Serializable
+data object SignupGraph : Route
+
+@Serializable
+sealed interface Signup : Route {
+    @Serializable
+    data object Agreement : Signup
+
+    @Serializable
+    data object AuthPhone : Signup
+
+    @Serializable
+    data object SetPassword : Signup
+
+    @Serializable
+    data object SetNickname : Signup
+
+    @Serializable
+    data object Welcome : Signup
 }

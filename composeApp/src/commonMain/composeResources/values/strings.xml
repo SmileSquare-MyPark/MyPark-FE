@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
+    
+
     <string name="login_main_title">함께 해서 즐거운 마이파크</string>
     <string name="login">MYPARK 로그인</string>
     <string name="login_comfortable">간편 로그인</string>
@@ -15,15 +17,16 @@
     <string name="sign_up">서비스 가입</string>
     <string name="sign_up_info">서비스 시작 및 가입을 위해 먼저 약관을 읽고 가입 및 정보제공에 동의 해주세요.</string>
     <string name="agree_all">전체 동의</string>
-    <string name="terms_consolidated">통합 이용 약관</string>
+    <string name="terms_unified">통합 이용 약관</string>
     <string name="privacy_collection_usage_details">개인정보 수집 이용 내역</string>
     <string name="terms_location">위치정보 이용 약관</string>
     <string name="privacy_third_party_provision">개인정보 제 3자 제공</string>
-    <string name="terms_unified">통합 이용 약관</string>
+    <string name="marketing_advertising_use">마케팅 광고 활용</string>
     <string name="sns_receive">SNS 수신</string>
     <string name="use_kakao_profile">카카오톡 프로필 사진 사용</string>
     <string name="next">다음</string>
     <string name="required">필수</string>
+    <string name="see_more">보기</string>
     <string name="set_nickname">닉네임 설정</string>
     <string name="required_nickname">닉네임을 입력해주세요</string>
     <string name="nickname_guide">마이파크에서 사용하실 닉네임을 입력해주세요. </string>
@@ -55,4 +58,12 @@
     <string name="ball_speed">볼스피드</string>
     <string name="launch_angle">발사각</string>
     <string name="back_spin">백스핀</string>
+    <string name="password_title">비밀번호를 설정 해주세요</string>
+    <string name="password_sub">비밀번호를 입력해주세요.</string>
+    <string name="new_password">새로운 비밀번호</string>
+    <string name="require_password">새로운 비밀번호를 입력해주세요</string>
+    <string name="confirm_password">비밀번호 확인</string>
+    <string name="complete_sign_up">MYPARK 가입이 \n완료되었습니다.</string>
+    <string name="welcome_app">회원가입을 축하합니다!\n로그인 하여 마이파크를 이용해보세요!</string>
+    <string name="confirm">확인</string>
 </resources>

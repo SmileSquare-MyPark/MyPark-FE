@@ -1,0 +1,34 @@
+package com.smile.mypark.di
+
+import com.smile.mypark.KakaoLoginGatewayIos
+import com.smile.mypark.NaverLoginGatewayIos
+import com.smile.mypark.presentation.auth.KakaoLoginGateway
+import com.smile.mypark.presentation.auth.NaverLoginGateway
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.engine.darwin.Darwin
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import org.koin.dsl.module
+
+class IOSNetworkConfig(
+    override val baseUrl: String
+) : NetworkConfig
+
+actual val platformModule = module {
+    single<NetworkConfig> { IOSNetworkConfig(baseUrl = "http://13.210.68.101:8080/")}
+    single<HttpClientEngine> { Darwin.create() }
+    single<KakaoLoginGateway> { KakaoLoginGatewayIos() }
+    single<NaverLoginGateway> { NaverLoginGatewayIos() }
+}
+
+actual fun provideHttpClient(config: NetworkConfig): HttpClient =
+    HttpClient(Darwin) {
+        install(Logging) {
+            level = LogLevel.ALL
+            logger = object : Logger {
+                override fun log(message: String) = print("Ktor-iOS: $message")
+            }
+        }
+    }

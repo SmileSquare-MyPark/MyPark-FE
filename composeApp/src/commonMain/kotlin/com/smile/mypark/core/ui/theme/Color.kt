@@ -1,6 +1,18 @@
-package com.smile.mypark.ui.theme
+package com.smile.mypark.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
+
+val Gray100 = Color(0xFF171A1C)
+val Gray90 = Color(0xFF212121)
+val Gray80 = Color(0xFF424242)
+val Gray70 = Color(0xFF616161)
+val Gray60 = Color(0xFF757575)
+val Gray50 = Color(0xFF9E9E9E)
+val Gray40 = Color(0xFFBDBDBD)
+val Gray30 = Color(0xFFE0E0E0)
+val Gray20 = Color(0xFFEEEEEE)
+val Gray10 = Color(0xFFF5F5F5)
+val Gray05 = Color(0xFFFAFAFA)
 
 val Primary = Color(0xFF04925E)
 val Sub = Color(0xFF32C570)
