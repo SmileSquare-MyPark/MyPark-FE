@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Build
 import android.widget.Toast
 import org.koin.core.context.GlobalContext
-import org.koin.mp.KoinPlatformTools
 
 class AndroidPlatform : Platform {
     override val name: String = "Android ${Build.VERSION.SDK_INT}"
