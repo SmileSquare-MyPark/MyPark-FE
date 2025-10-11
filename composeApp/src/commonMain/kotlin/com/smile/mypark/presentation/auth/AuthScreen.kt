@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.smile.mypark.core.ext.toFixedSp
+import com.smile.mypark.showToast
 import com.smile.mypark.core.ui.theme.NeutralGray
 import com.smile.mypark.domain.model.SignStartArgs
 import com.smile.mypark.presentation.auth.component.AuthSubtitle
@@ -53,7 +54,7 @@ internal fun AuthRoute(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { eff ->
             when (eff) {
-                is AuthContract.AuthSideEffect.Toast -> { println("[Auth] Toast: ${eff.msg}") }
+                is AuthContract.AuthSideEffect.Toast -> showToast("[Auth] Toast: ${eff.msg}")
                 AuthContract.AuthSideEffect.NavigateFindIdPw -> { /* TODO */ }
                 AuthContract.AuthSideEffect.NavigateHome -> { navigateHome() }
                 is AuthContract.AuthSideEffect.NavigateSignup -> navigateSignup(eff.args)

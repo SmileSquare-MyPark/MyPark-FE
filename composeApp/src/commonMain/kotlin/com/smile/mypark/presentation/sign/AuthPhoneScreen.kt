@@ -30,6 +30,7 @@ import com.smile.mypark.core.ui.theme.NeutralGray
 import com.smile.mypark.core.ui.theme.White
 import com.smile.mypark.presentation.auth.component.BorderedRoundedRect7
 import com.smile.mypark.presentation.auth.component.MyparkLoginButton
+import com.smile.mypark.showToast
 import mypark.composeapp.generated.resources.Res
 import mypark.composeapp.generated.resources.confirm_verification_code
 import mypark.composeapp.generated.resources.enter_phone_number
@@ -65,9 +66,7 @@ internal fun AuthPhoneRoute(
         viewModel.effect.collect { eff ->
             when (eff) {
                 is SignContract.SideEffect.NavigateNext -> navigateNext(eff.step)
-                is SignContract.SideEffect.Toast -> {
-
-                }
+                is SignContract.SideEffect.Toast -> showToast(eff.msg)
                 else -> Unit
             }
         }

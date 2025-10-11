@@ -33,6 +33,7 @@ import com.smile.mypark.core.ui.theme.White
 import com.smile.mypark.presentation.auth.component.MyparkLoginButton
 import com.smile.mypark.presentation.auth.component.RoundedRect7
 import com.smile.mypark.presentation.sign.component.TermsList
+import com.smile.mypark.showToast
 import mypark.composeapp.generated.resources.Res
 import mypark.composeapp.generated.resources.agreement
 import mypark.composeapp.generated.resources.ic_radio_off
@@ -66,9 +67,7 @@ internal fun AgreementRoute(
                 is SignContract.SideEffect.ShowTermsDetail -> {
                     // 약관 상세 화면
                 }
-                is SignContract.SideEffect.Toast -> {
-                    // 스낵바/토스트
-                }
+                is SignContract.SideEffect.Toast -> showToast(eff.msg)
             }
         }
     }

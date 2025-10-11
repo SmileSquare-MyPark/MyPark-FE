@@ -1,7 +1,6 @@
 package com.smile.mypark
 
 import android.app.Application
-import androidx.viewbinding.BuildConfig
 import com.kakao.sdk.common.KakaoSdk
 import com.navercorp.nid.NaverIdLoginSDK
 import com.smile.mypark.di.androidLoginModule

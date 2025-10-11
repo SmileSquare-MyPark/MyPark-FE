@@ -2,6 +2,7 @@ package com.smile.mypark.di
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import com.smile.mypark.KakaoLoginGatewayAndroid
 import com.smile.mypark.NaverLoginGatewayAndroid
 import com.smile.mypark.R
@@ -38,7 +39,11 @@ actual fun provideHttpClient(config: NetworkConfig): HttpClient =
     HttpClient(OkHttp) {
         install(Logging) {
             level = LogLevel.BODY
-            logger = Logger.DEFAULT
+            logger =  object : Logger {
+                override fun log(message: String) {
+                    Log.d("OKHttp-ktor", message)
+                }
+            }
         }
         install(ContentNegotiation) {
             json(

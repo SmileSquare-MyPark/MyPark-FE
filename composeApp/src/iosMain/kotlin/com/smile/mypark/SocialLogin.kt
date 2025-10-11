@@ -4,8 +4,8 @@ import com.smile.mypark.presentation.auth.AuthKakaoResultBridge
 import com.smile.mypark.presentation.auth.AuthNaverResultBridge
 import com.smile.mypark.presentation.auth.KakaoLoginGateway
 import com.smile.mypark.presentation.auth.NaverLoginGateway
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -24,7 +24,7 @@ class KakaoLoginGatewayIos : KakaoLoginGateway {
             KAKAO_LOGIN_START,
             null
         )
-        val job = GlobalScope.launch(Dispatchers.Main) {
+        val job = CoroutineScope(Dispatchers.Main).launch {
             val result = AuthKakaoResultBridge.events.first()
             result.onSuccess {
                 if (!cont.isCompleted) cont.resume(it)
@@ -43,7 +43,7 @@ class NaverLoginGatewayIos : NaverLoginGateway {
             null
         )
 
-        val job = GlobalScope.launch(Dispatchers.Main) {
+        val job = CoroutineScope(Dispatchers.Main).launch {
             val result = AuthNaverResultBridge.events.first()
             result.onSuccess { if (!cont.isCompleted) cont.resume(it) }
                 .onFailure { if (!cont.isCompleted) cont.resumeWithException(it) }

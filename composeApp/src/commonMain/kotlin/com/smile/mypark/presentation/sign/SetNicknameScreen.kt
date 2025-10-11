@@ -31,6 +31,7 @@ import com.smile.mypark.core.ui.theme.NeutralGray
 import com.smile.mypark.core.ui.theme.White
 import com.smile.mypark.presentation.auth.component.BorderedRoundedRect7
 import com.smile.mypark.presentation.auth.component.MyparkLoginButton
+import com.smile.mypark.showToast
 import mypark.composeapp.generated.resources.Res
 import mypark.composeapp.generated.resources.enter_nickname
 import mypark.composeapp.generated.resources.next
@@ -54,7 +55,7 @@ internal fun SetNicknameRoute(
         viewModel.effect.collect { eff ->
             when (eff) {
                 is SignContract.SideEffect.NavigateNext -> navigateNext(eff.step)
-                is SignContract.SideEffect.Toast -> { /* 스낵바/토스트 */ }
+                is SignContract.SideEffect.Toast -> showToast(eff.msg)
                 else -> Unit
             }
         }

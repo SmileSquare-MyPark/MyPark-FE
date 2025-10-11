@@ -17,7 +17,7 @@ class IOSNetworkConfig(
 ) : NetworkConfig
 
 actual val platformModule = module {
-    single<NetworkConfig> { IOSNetworkConfig(baseUrl = "") }
+    single<NetworkConfig> { IOSNetworkConfig(baseUrl = "http://13.210.68.101:8080/")}
     single<HttpClientEngine> { Darwin.create() }
     single<KakaoLoginGateway> { KakaoLoginGatewayIos() }
     single<NaverLoginGateway> { NaverLoginGatewayIos() }

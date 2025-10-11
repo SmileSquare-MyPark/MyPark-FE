@@ -41,6 +41,7 @@ import com.smile.mypark.core.ui.theme.NeutralGray
 import com.smile.mypark.presentation.auth.component.BorderedRoundedRect7
 import com.smile.mypark.presentation.auth.component.MyParkLogo
 import com.smile.mypark.presentation.auth.component.MyparkLoginButton
+import com.smile.mypark.showToast
 import mypark.composeapp.generated.resources.Res
 import mypark.composeapp.generated.resources.ic_radio_off
 import mypark.composeapp.generated.resources.ic_radio_on
@@ -68,7 +69,7 @@ internal fun LoginRoute(
                 AuthContract.AuthSideEffect.NavigateHome -> navigateToHome()
                 is AuthContract.AuthSideEffect.NavigateSignup -> navigateToSignUp()
                 AuthContract.AuthSideEffect.NavigateFindIdPw -> navigateToFindIdPw()
-                is AuthContract.AuthSideEffect.Toast -> { /* show toast */ }
+                is AuthContract.AuthSideEffect.Toast -> showToast(eff.msg)
             }
 
         }
