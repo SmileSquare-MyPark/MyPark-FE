@@ -1,5 +1,6 @@
 package com.smile.mypark
 
+import androidx.compose.runtime.Composable
 import platform.UIKit.UIAlertController
 import platform.UIKit.UIAlertControllerStyleAlert
 import platform.UIKit.UIApplication
@@ -27,3 +28,7 @@ actual fun showToast(message: String) {
         }
     })
 }
+
+actual fun exitApp() = Unit
+@Composable
+actual fun BackHandlerCompose(onBack: () -> Unit) = Unit

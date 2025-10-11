@@ -24,10 +24,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.smile.mypark.BackHandlerCompose
 import com.smile.mypark.core.ext.toFixedSp
 import com.smile.mypark.showToast
 import com.smile.mypark.core.ui.theme.NeutralGray
 import com.smile.mypark.domain.model.SignStartArgs
+import com.smile.mypark.exitApp
 import com.smile.mypark.presentation.auth.component.AuthSubtitle
 import com.smile.mypark.presentation.auth.component.MyParkLogo
 import com.smile.mypark.presentation.auth.component.MyparkLoginButton
@@ -78,6 +80,11 @@ private fun AuthScreen(
     onEvent: (AuthContract.AuthEvent) -> Unit,
     navigateLogin: () -> Unit,
 ) {
+
+    BackHandlerCompose {
+        exitApp()
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
