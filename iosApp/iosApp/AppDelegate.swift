@@ -21,6 +21,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         NidOAuth.shared.initialize()
         NaverIosStarter.setupObservers()
+        MapIosStarter.setupObservers()
+
         return true
     }
 

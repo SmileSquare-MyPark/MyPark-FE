@@ -19,6 +19,9 @@ sealed interface Route {
     data object QR : Route
 
     @Serializable
+    data object Map : Route
+
+    @Serializable
     data class Setting(val id: String) : Route
 }
 

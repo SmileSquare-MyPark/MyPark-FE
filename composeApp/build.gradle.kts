@@ -40,6 +40,8 @@ kotlin {
 
             implementation("com.kakao.sdk:v2-user:2.20.6")
             implementation("com.navercorp.nid:oauth:5.10.0")
+            implementation("com.naver.maps:map-sdk:3.23.0")
+            implementation("com.google.android.gms:play-services-location:21.3.0")
 
         }
         commonMain.dependencies {
@@ -90,6 +92,8 @@ android {
         buildConfigField("String", "KAKAO_APP_KEY", "\"${properties["KAKAO_APP_KEY"]}\"")
         buildConfigField("String", "NAVER_CLIENT_ID", "\"${properties["NAVER_CLIENT_ID"]}\"")
         buildConfigField("String", "NAVER_CLIENT_SECRET", "\"${properties["NAVER_CLIENT_SECRET"]}\"")
+        buildConfigField("String", "NAVER_MAPS_CLIENT_ID", "\"${properties["NAVER_MAPS_CLIENT_ID"]}\"")
+        buildConfigField("String", "NAVER_MAPS_CLIENT_SECRET", "\"${properties["NAVER_MAPS_CLIENT_SECRET"]}\"")
     }
     packaging {
         resources {
@@ -102,6 +106,7 @@ android {
 
             manifestPlaceholders["NAVER_CLIENT_ID"] = properties["NAVER_CLIENT_ID"] as String
             manifestPlaceholders["KAKAO_APP_KEY"]   = properties["KAKAO_APP_KEY"] as String
+            manifestPlaceholders["NAVER_MAPS_CLIENT_ID"] = properties["NAVER_MAPS_CLIENT_ID"] as String
         }
 
         release {
@@ -109,6 +114,7 @@ android {
 
             manifestPlaceholders["NAVER_CLIENT_ID"] = properties["NAVER_CLIENT_ID"] as String
             manifestPlaceholders["KAKAO_APP_KEY"]   = properties["KAKAO_APP_KEY"] as String
+            manifestPlaceholders["NAVER_MAPS_CLIENT_ID"] = properties["NAVER_MAPS_CLIENT_ID"] as String
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
