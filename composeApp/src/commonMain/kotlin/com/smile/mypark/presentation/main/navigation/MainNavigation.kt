@@ -98,6 +98,9 @@ internal class MainNavigator(
         navController.navigate(Route.Splash) { popUpTo(0) { inclusive = true } }
     }
 
+    fun navigateMap() {
+        navController.navigate(Route.Map)
+    }
 
     private fun popBackStack() {
         navController.popBackStack()

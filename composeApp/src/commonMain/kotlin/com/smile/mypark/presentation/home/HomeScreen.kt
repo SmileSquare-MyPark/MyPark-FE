@@ -1,6 +1,7 @@
 package com.smile.mypark.presentation.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,7 +31,6 @@ import com.smile.mypark.core.ui.component.ScoreItem
 import com.smile.mypark.core.ui.component.VerticalLine
 import com.smile.mypark.core.ui.theme.Gray20
 import com.smile.mypark.core.ui.theme.Gray70
-import com.smile.mypark.core.ui.theme.Gray80
 import com.smile.mypark.core.ui.theme.Primary
 import com.smile.mypark.core.ui.theme.Sub
 import com.smile.mypark.core.ui.theme.White
@@ -43,6 +43,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun HomeRoute(
     padding: PaddingValues,
+    onClickOpenMap: () -> Unit,
 ) {
     val viewModel = koinViewModel<HomeViewModel>()
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
@@ -50,6 +51,7 @@ internal fun HomeRoute(
     HomeScreen(
         padding = padding,
         viewState = viewState,
+        onClickOpenMap = onClickOpenMap
     )
 }
 
@@ -57,6 +59,8 @@ internal fun HomeRoute(
 private fun HomeScreen(
     padding: PaddingValues,
     viewState: HomeContract.HomeViewState,
+    onClickOpenMap: () -> Unit,
+
 ) {
 
     Column(
@@ -215,7 +219,8 @@ private fun HomeScreen(
                 backgroundColor = Sub
             ) {
                 Row(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.padding(16.dp)
+                        .clickable { onClickOpenMap() },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
@@ -248,5 +253,6 @@ private fun PreviewHome() {
     HomeScreen(
         padding = PaddingValues(),
         viewState = HomeContract.HomeViewState(),
+        onClickOpenMap = {}
     )
 }

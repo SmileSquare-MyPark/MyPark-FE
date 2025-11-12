@@ -19,6 +19,7 @@ import com.smile.mypark.presentation.auth.AuthRoute
 import com.smile.mypark.presentation.auth.LoginRoute
 import com.smile.mypark.presentation.contest.ContestRoute
 import com.smile.mypark.presentation.home.HomeRoute
+import com.smile.mypark.presentation.home.MapRoute
 import com.smile.mypark.presentation.main.SplashScreen
 import com.smile.mypark.presentation.main.navigation.MainNavigator
 import com.smile.mypark.presentation.main.navigation.MainTabRoute
@@ -190,7 +191,10 @@ internal fun MainNavHost(
             }
 
             composable<MainTabRoute.Home> {
-                HomeRoute(padding = padding)
+                HomeRoute(
+                    padding = padding,
+                    onClickOpenMap = { navigator.navigateMap() }
+                )
             }
 
             composable<MainTabRoute.Result> {
@@ -207,6 +211,10 @@ internal fun MainNavHost(
 
             composable<Route.QR> {
                 QrRoute(padding = padding)
+            }
+
+            composable<Route.Map> {
+                MapRoute(padding = padding)
             }
         }
     }
