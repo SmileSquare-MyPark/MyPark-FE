@@ -1,5 +1,6 @@
 package com.smile.mypark.di
 
+import com.smile.mypark.Config
 import com.smile.mypark.KakaoLoginGatewayIos
 import com.smile.mypark.NaverLoginGatewayIos
 import com.smile.mypark.presentation.auth.KakaoLoginGateway
@@ -17,7 +18,7 @@ class IOSNetworkConfig(
 ) : NetworkConfig
 
 actual val platformModule = module {
-    single<NetworkConfig> { IOSNetworkConfig(baseUrl = "http://13.210.68.101:8080/")}
+    single<NetworkConfig> { IOSNetworkConfig(baseUrl = Config.BASE_URL)}
     single<HttpClientEngine> { Darwin.create() }
     single<KakaoLoginGateway> { KakaoLoginGatewayIos() }
     single<NaverLoginGateway> { NaverLoginGatewayIos() }

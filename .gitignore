@@ -20,3 +20,4 @@ composeApp/src/androidMain/res/values/strings.xml
 iosApp/iosApp.xcodeproj/project.pbxproj
 composeApp/src/androidMain/res/values/strings.xml
 /composeApp/src/androidMain/res/values
+composeApp/src/iosMain/kotlin/com/smile/mypark/Config.kt
