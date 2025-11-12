@@ -19,3 +19,4 @@ captures
 composeApp/src/androidMain/res/values/strings.xml
 iosApp/iosApp.xcodeproj/project.pbxproj
 composeApp/src/androidMain/res/values/strings.xml
+/composeApp/src/androidMain/res/values
