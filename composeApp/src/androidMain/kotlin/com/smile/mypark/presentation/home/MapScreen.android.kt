@@ -1,13 +1,11 @@
 package com.smile.mypark.presentation.home
 
-import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,7 +21,6 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapView
-import com.naver.maps.map.NaverMap
 import com.naver.maps.map.util.FusedLocationSource
 
 @Composable
