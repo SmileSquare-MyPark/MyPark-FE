@@ -1,4 +1,4 @@
-package com.hgh.ui.ext
+package com.smile.mypark.core.ext
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.lazy.LazyListState

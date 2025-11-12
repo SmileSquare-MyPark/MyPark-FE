@@ -38,10 +38,13 @@ kotlin {
             implementation(libs.koin.androidx.compose)
             implementation(libs.ktor.client.okhttp)
 
-            implementation("com.kakao.sdk:v2-user:2.20.6")
-            implementation("com.navercorp.nid:oauth:5.10.0")
-            implementation("com.naver.maps:map-sdk:3.23.0")
-            implementation("com.google.android.gms:play-services-location:21.3.0")
+            implementation(libs.naver.map)
+            implementation(libs.play.services.location)
+            implementation(libs.datastore.preferences)
+            implementation(libs.datastore.preferences.core)
+
+            implementation(libs.kakao.login)
+            implementation(libs.naver.login)
 
         }
         commonMain.dependencies {

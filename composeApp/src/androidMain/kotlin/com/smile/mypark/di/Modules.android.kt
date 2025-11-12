@@ -33,6 +33,8 @@ class AndroidNetworkConfig(private val context: Context) : NetworkConfig {
 
 actual val platformModule = module {
     single<NetworkConfig> { AndroidNetworkConfig(androidContext()) }
+    single<KakaoLoginGateway> { KakaoLoginGatewayAndroid(androidContext()) }
+    single<NaverLoginGateway> { NaverLoginGatewayAndroid(androidContext()) }
 }
 
 actual fun provideHttpClient(config: NetworkConfig): HttpClient =

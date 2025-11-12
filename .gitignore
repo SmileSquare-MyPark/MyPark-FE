@@ -18,3 +18,4 @@ captures
 **/xcshareddata/WorkspaceSettings.xcsettings
 composeApp/src/androidMain/res/values/strings.xml
 iosApp/iosApp.xcodeproj/project.pbxproj
+composeApp/src/androidMain/res/values/strings.xml

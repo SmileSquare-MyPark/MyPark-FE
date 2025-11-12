@@ -13,7 +13,7 @@ class MyParkApp: Application() {
         super.onCreate()
         initializeKoin {
             androidContext(this@MyParkApp)
-            modules(androidLoginModule)
+//            modules(androidLoginModule)
 
         }
         registerActivityLifecycleCallbacks(ActivityHolder)
