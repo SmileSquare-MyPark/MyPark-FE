@@ -31,7 +31,6 @@ import com.smile.mypark.core.ui.component.ScoreItem
 import com.smile.mypark.core.ui.component.VerticalLine
 import com.smile.mypark.core.ui.theme.Gray20
 import com.smile.mypark.core.ui.theme.Gray70
-import com.smile.mypark.core.ui.theme.Gray80
 import com.smile.mypark.core.ui.theme.Primary
 import com.smile.mypark.core.ui.theme.Sub
 import com.smile.mypark.core.ui.theme.White
