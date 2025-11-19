@@ -14,9 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import androidx.navigation.toRoute
 import com.smile.mypark.core.ui.theme.White
 import com.smile.mypark.presentation.auth.AuthRoute
 import com.smile.mypark.presentation.auth.LoginRoute
+import com.smile.mypark.presentation.contest.ContestDetailRoute
 import com.smile.mypark.presentation.contest.ContestRoute
 import com.smile.mypark.presentation.home.HomeRoute
 import com.smile.mypark.presentation.home.MapRoute
@@ -202,7 +204,10 @@ internal fun MainNavHost(
             }
 
             composable<MainTabRoute.Contest> {
-                ContestRoute(padding = padding)
+                ContestRoute(
+                    padding = padding,
+                    navigateToDetail = { id -> navigator.navigateContestDetail(id) }
+                )
             }
 
             composable<MainTabRoute.My> {
@@ -215,6 +220,14 @@ internal fun MainNavHost(
 
             composable<Route.Map> {
                 MapRoute(padding = padding)
+            }
+
+            composable<Route.ContestDetail> { backStackEntry ->
+                val args = backStackEntry.toRoute<Route.ContestDetail>()
+                ContestDetailRoute(
+                    padding = padding,
+                    contestId = args.contestId,
+                )
             }
         }
     }

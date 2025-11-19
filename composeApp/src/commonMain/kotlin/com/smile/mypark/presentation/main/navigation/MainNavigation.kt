@@ -102,6 +102,10 @@ internal class MainNavigator(
         navController.navigate(Route.Map)
     }
 
+    fun navigateContestDetail(contestId: Long) {
+        navController.navigate(Route.ContestDetail(contestId))
+    }
+
     private fun popBackStack() {
         navController.popBackStack()
     }
