@@ -28,7 +28,11 @@ import com.smile.mypark.presentation.main.navigation.MainTabRoute
 import com.smile.mypark.presentation.main.navigation.Route
 import com.smile.mypark.presentation.main.navigation.Signup
 import com.smile.mypark.presentation.main.navigation.SignupGraph
+import com.smile.mypark.presentation.my.ChangePasswordRoute
+import com.smile.mypark.presentation.my.ChangePasswordScreen
+import com.smile.mypark.presentation.my.MyResultScreen
 import com.smile.mypark.presentation.my.MyRoute
+import com.smile.mypark.presentation.my.PersonalSettingsScreen
 import com.smile.mypark.presentation.qr.QrRoute
 import com.smile.mypark.presentation.result.ResultRoute
 import com.smile.mypark.presentation.sign.AgreementRoute
@@ -210,8 +214,25 @@ internal fun MainNavHost(
                 )
             }
 
+            composable<Route.MyResult> {
+                MyResultScreen(padding = padding)
+            }
+
+            composable<Route.ChangePassword> {
+                ChangePasswordRoute(padding = padding, navigator)
+            }
+
+            composable<Route.PersonalSettings> {
+                PersonalSettingsScreen(padding = padding)
+            }
+
             composable<MainTabRoute.My> {
-                MyRoute(padding = padding)
+                MyRoute(
+                    padding = padding,
+                    onNavigateMyResult = { navigator.navigateMyResult() },
+                    onNavigateChangePassword = { navigator.navigateChangePassword() },
+                    onNavigatePersonalSettings = { navigator.navigatePersonalSettings() }
+                )
             }
 
             composable<Route.QR> {

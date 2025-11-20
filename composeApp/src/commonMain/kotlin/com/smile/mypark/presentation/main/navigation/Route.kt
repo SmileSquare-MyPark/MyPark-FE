@@ -26,6 +26,12 @@ sealed interface Route {
 
     @Serializable
     data class ContestDetail(val contestId: Long) : Route
+    @Serializable
+    data object MyResult : Route
+    @Serializable
+    data object ChangePassword : Route
+    @Serializable
+    data object PersonalSettings : Route
 }
 
 sealed interface MainTabRoute : Route {
