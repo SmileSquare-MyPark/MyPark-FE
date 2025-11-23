@@ -40,8 +40,6 @@ kotlin {
 
             implementation(libs.naver.map)
             implementation(libs.play.services.location)
-            implementation(libs.datastore.preferences)
-            implementation(libs.datastore.preferences.core)
 
             implementation(libs.kakao.login)
             implementation(libs.naver.login)
@@ -67,6 +65,9 @@ kotlin {
             implementation(libs.bundles.coil)
 
             implementation(libs.scanner)
+
+            implementation(libs.datastore.preferences)
+            implementation(libs.datastore.preferences.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

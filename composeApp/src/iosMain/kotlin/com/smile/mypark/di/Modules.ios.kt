@@ -3,8 +3,8 @@ package com.smile.mypark.di
 import com.smile.mypark.Config
 import com.smile.mypark.KakaoLoginGatewayIos
 import com.smile.mypark.NaverLoginGatewayIos
-import com.smile.mypark.data.local.LocalStorage
-import com.smile.mypark.data.local.LocalStorageIos
+import com.smile.mypark.domain.repository.DataStoreRepository
+import com.smile.mypark.data.local.createDataStore
 import com.smile.mypark.presentation.auth.KakaoLoginGateway
 import com.smile.mypark.presentation.auth.NaverLoginGateway
 import io.ktor.client.HttpClient
@@ -19,6 +19,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.takeFrom
 import kotlinx.coroutines.runBlocking
+import org.koin.core.module.Module
 import org.koin.dsl.module
 
 class IOSNetworkConfig(
@@ -30,11 +31,12 @@ actual val platformModule = module {
     single<HttpClientEngine> { Darwin.create() }
     single<KakaoLoginGateway> { KakaoLoginGatewayIos() }
     single<NaverLoginGateway> { NaverLoginGatewayIos() }
-
-    single<LocalStorage> { LocalStorageIos() }
 }
 
-actual fun provideHttpClient(config: NetworkConfig, localStorage: LocalStorage): HttpClient =
+actual val dataStoreModule: Module
+    get() = module { single { createDataStore() } }
+
+actual fun provideHttpClient(config: NetworkConfig, localStorage: DataStoreRepository): HttpClient =
     HttpClient(Darwin) {
         install(Logging) {
             level = LogLevel.ALL

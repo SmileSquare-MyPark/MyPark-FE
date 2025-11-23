@@ -1,6 +1,6 @@
-package com.smile.mypark.data.local
+package com.smile.mypark.domain.repository
 
-interface LocalStorage {
+interface DataStoreRepository {
     suspend fun setAccessToken(token: String)
     suspend fun getAccessToken(): String?
 

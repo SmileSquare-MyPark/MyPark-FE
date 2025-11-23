@@ -18,12 +18,12 @@ coil3 = "3.0.0-rc02"
 ksp = "2.0.20-1.0.24"
 junit = "4.13.2"
 kotlin = "2.0.21"
-datastore = "1.0.0"
 naver = "5.10.0"
 play-services-location = "21.3.0"
 scanner = "0.3.0"
 kakao = "2.20.6"
 naver-map = "3.23.0"
+datastore = "1.1.3"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }

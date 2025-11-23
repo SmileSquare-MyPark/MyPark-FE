@@ -27,6 +27,7 @@ fun initializeKoin(config: KoinAppDeclaration? = null) {
             platformModule,
             repositoryModule,
             serviceModule,
+            dataStoreModule,
             useCaseModule,
             appModule
         )

@@ -1,13 +1,13 @@
 package com.smile.mypark.di
 
-import android.R.id.message
 import android.content.Context
 import android.util.Log
 import com.smile.mypark.KakaoLoginGatewayAndroid
 import com.smile.mypark.NaverLoginGatewayAndroid
 import com.smile.mypark.R
-import com.smile.mypark.data.local.LocalStorage
+import com.smile.mypark.domain.repository.DataStoreRepository
 import com.smile.mypark.data.local.LocalStorageAndroid
+import com.smile.mypark.data.local.createDataStore
 import com.smile.mypark.presentation.auth.KakaoLoginGateway
 import com.smile.mypark.presentation.auth.NaverLoginGateway
 import io.ktor.client.HttpClient
@@ -26,6 +26,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.Module
 import org.koin.dsl.module
 
 class AndroidNetworkConfig(private val context: Context) : NetworkConfig {
@@ -38,10 +39,10 @@ actual val platformModule = module {
     single<KakaoLoginGateway> { KakaoLoginGatewayAndroid(androidContext()) }
     single<NaverLoginGateway> { NaverLoginGatewayAndroid(androidContext()) }
 
-    single<LocalStorage> { LocalStorageAndroid(androidContext()) }
+    single<DataStoreRepository> { LocalStorageAndroid(androidContext()) }
 }
 
-actual fun provideHttpClient(config: NetworkConfig, localStorage: LocalStorage): HttpClient =
+actual fun provideHttpClient(config: NetworkConfig, localStorage: DataStoreRepository): HttpClient =
     HttpClient(OkHttp) {
         defaultRequest {
             url { takeFrom(config.baseUrl) }
@@ -72,6 +73,9 @@ actual fun provideHttpClient(config: NetworkConfig, localStorage: LocalStorage):
             )
         }
     }
+
+actual val dataStoreModule: Module
+    get() = module { single { createDataStore(androidContext()) } }
 
 val androidLoginModule = module {
     single<KakaoLoginGateway> { KakaoLoginGatewayAndroid(androidContext()) }
