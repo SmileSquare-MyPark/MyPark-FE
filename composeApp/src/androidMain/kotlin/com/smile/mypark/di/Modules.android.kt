@@ -6,7 +6,6 @@ import com.smile.mypark.KakaoLoginGatewayAndroid
 import com.smile.mypark.NaverLoginGatewayAndroid
 import com.smile.mypark.R
 import com.smile.mypark.domain.repository.DataStoreRepository
-import com.smile.mypark.data.local.LocalStorageAndroid
 import com.smile.mypark.data.local.createDataStore
 import com.smile.mypark.presentation.auth.KakaoLoginGateway
 import com.smile.mypark.presentation.auth.NaverLoginGateway
@@ -38,8 +37,6 @@ actual val platformModule = module {
     single<NetworkConfig> { AndroidNetworkConfig(androidContext()) }
     single<KakaoLoginGateway> { KakaoLoginGatewayAndroid(androidContext()) }
     single<NaverLoginGateway> { NaverLoginGatewayAndroid(androidContext()) }
-
-    single<DataStoreRepository> { LocalStorageAndroid(androidContext()) }
 }
 
 actual fun provideHttpClient(config: NetworkConfig, localStorage: DataStoreRepository): HttpClient =
