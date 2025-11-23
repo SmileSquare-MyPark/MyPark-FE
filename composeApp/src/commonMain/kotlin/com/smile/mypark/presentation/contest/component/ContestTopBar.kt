@@ -23,6 +23,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import com.smile.mypark.core.ext.toFixedSp
 import com.smile.mypark.core.ui.theme.Black
@@ -42,10 +43,14 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun MyParkTopBar(
     onMenuClick: () -> Unit,
     modifier: Modifier = Modifier,
+    backgroundColor: Color = White,
+    menuTint: Color = Primary,
+    logoTint: Color? = null,
     logo: @Composable () -> Unit = {
         Image(
             painter = painterResource(Res.drawable.ic_mypark_logo),
             contentDescription = "MY PARK",
+            colorFilter = logoTint?.let { ColorFilter.tint(it) },
             modifier = Modifier
                 .size(width = 145.dp, height = 48.dp)
         )
@@ -54,7 +59,7 @@ fun MyParkTopBar(
     Column(
         modifier
             .fillMaxWidth()
-            .background(White)
+            .background(backgroundColor)
 
     ) {
         Row(
@@ -68,7 +73,7 @@ fun MyParkTopBar(
                 Icon(
                     painter = painterResource(Res.drawable.ic_menu_green),
                     contentDescription = "메뉴",
-                    tint = Primary,
+                    tint = menuTint,
                     modifier = Modifier
                         .size(width = 24.dp, height = 19.dp)
                 )

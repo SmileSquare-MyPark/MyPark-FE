@@ -106,6 +106,22 @@ internal class MainNavigator(
         navController.navigate(Route.ContestDetail(contestId))
     }
 
+    fun navigateMyResult() {
+        navController.navigate(Route.MyResult)
+    }
+
+    fun navigateChangePassword() {
+        navController.navigate(Route.ChangePassword)
+    }
+
+    fun navigatePersonalSettings() {
+        navController.navigate(Route.PersonalSettings)
+    }
+
+    fun navigateUp() {
+        navController.popBackStack()
+    }
+
     private fun popBackStack() {
         navController.popBackStack()
     }
@@ -129,8 +145,10 @@ internal class MainNavigator(
     }
 
     @Composable
-    fun shouldShowBottomBar() = MainTab.contains {
-        currentDestination?.hasRoute(it::class) == true
+    fun shouldShowBottomBar(): Boolean {
+        return MainTab.contains {
+            currentDestination?.hasRoute(it::class) == true
+        } || currentDestination?.hasRoute(Route.PersonalSettings::class) == true
     }
 }
 
