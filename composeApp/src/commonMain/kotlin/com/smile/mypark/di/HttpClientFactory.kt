@@ -1,5 +1,6 @@
 package com.smile.mypark.di
 
+import com.smile.mypark.data.local.LocalStorage
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -15,8 +16,8 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 object HttpClientFactory {
-    fun create(config: NetworkConfig): HttpClient {
-        return provideHttpClient(config).config {
+    fun create(config: NetworkConfig, localStorage: LocalStorage): HttpClient {
+        return provideHttpClient(config, localStorage).config {
             install(ContentNegotiation) {
                 json(
                     Json {

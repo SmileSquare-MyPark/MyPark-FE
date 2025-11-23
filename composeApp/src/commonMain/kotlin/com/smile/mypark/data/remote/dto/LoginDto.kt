@@ -1,12 +1,14 @@
 package com.smile.mypark.data.remote.dto
 
+import com.smile.mypark.data.remote.dto.type.AuthType
 import kotlinx.serialization.Serializable
 
 
 @Serializable
 data class LoginRequestDto(
     val uid: String,
-    val password: String?
+    val password: String?,
+    val kind: AuthType
 )
 
 @Serializable

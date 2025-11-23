@@ -61,7 +61,7 @@ private fun HomeScreen(
     viewState: HomeContract.HomeViewState,
     onClickOpenMap: () -> Unit,
 
-) {
+    ) {
 
     Column(
         Modifier.fillMaxSize().background(White).padding(padding)
@@ -81,7 +81,7 @@ private fun HomeScreen(
                         verticalAlignment = Alignment.Bottom
                     ) {
                         Text(
-                            viewState.userData.s1,
+                            viewState.homeInfo.userNickname,
                             style = MaterialTheme.typography.bodyLarge.copy(
                                 fontSize = 25.toFixedSp(), lineHeight = 29.toFixedSp()
                             )
@@ -107,19 +107,19 @@ private fun HomeScreen(
                         modifier = Modifier.height(70.dp)
                     ) {
                         ScoreItem(
-                            score = viewState.userData.s1,
+                            score = viewState.homeInfo.holeInOneCount.toString(),
                             title = "홀인원",
                             modifier = Modifier.weight(1f)
                         )
                         VerticalLine()
                         ScoreItem(
-                            score = viewState.userData.s1,
+                            score =viewState.homeInfo.albatrossCount.toString(),
                             title = "알바트로스",
                             modifier = Modifier.weight(1f)
                         )
                         VerticalLine()
                         ScoreItem(
-                            score = viewState.userData.s1,
+                            score = viewState.homeInfo.eagleCount.toString(),
                             title = "이글",
                             modifier = Modifier.weight(1f)
                         )
@@ -131,21 +131,21 @@ private fun HomeScreen(
                         modifier = Modifier.height(70.dp)
                     ) {
                         ScoreItem(
-                            score = viewState.userData.s1,
+                            score = viewState.homeInfo.experienceYears.toString(),
                             title = "MY PARK 구력",
                             unit = "개월",
                             modifier = Modifier.weight(1f)
                         )
                         VerticalLine()
                         ScoreItem(
-                            score = viewState.userData.s1,
+                            score = viewState.homeInfo.recentAvgScore.toString(),
                             title = "최근 5경기 추이",
                             unit = "타",
                             modifier = Modifier.weight(1f)
                         )
                         VerticalLine()
                         ScoreItem(
-                            score = viewState.userData.s1,
+                            score = viewState.homeInfo.bestScore.toString(),
                             title = "베스트 스코어",
                             unit = "타",
                             modifier = Modifier.weight(1f)
@@ -186,9 +186,9 @@ private fun HomeScreen(
                 }
             }
             Spacer(Modifier.height(16.dp))
-            Row (
+            Row(
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 Icon(
                     painterResource(Res.drawable.ic_test),
                     null,
@@ -243,6 +243,7 @@ private fun HomeScreen(
                     )
                 }
             }
+
         }
     }
 }

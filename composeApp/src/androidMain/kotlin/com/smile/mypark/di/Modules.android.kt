@@ -1,18 +1,19 @@
 package com.smile.mypark.di
 
-import android.app.Activity
+import android.R.id.message
 import android.content.Context
 import android.util.Log
 import com.smile.mypark.KakaoLoginGatewayAndroid
 import com.smile.mypark.NaverLoginGatewayAndroid
 import com.smile.mypark.R
+import com.smile.mypark.data.local.LocalStorage
+import com.smile.mypark.data.local.LocalStorageAndroid
 import com.smile.mypark.presentation.auth.KakaoLoginGateway
 import com.smile.mypark.presentation.auth.NaverLoginGateway
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
@@ -22,6 +23,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -35,10 +37,24 @@ actual val platformModule = module {
     single<NetworkConfig> { AndroidNetworkConfig(androidContext()) }
     single<KakaoLoginGateway> { KakaoLoginGatewayAndroid(androidContext()) }
     single<NaverLoginGateway> { NaverLoginGatewayAndroid(androidContext()) }
+
+    single<LocalStorage> { LocalStorageAndroid(androidContext()) }
 }
 
-actual fun provideHttpClient(config: NetworkConfig): HttpClient =
+actual fun provideHttpClient(config: NetworkConfig, localStorage: LocalStorage): HttpClient =
     HttpClient(OkHttp) {
+        defaultRequest {
+            url { takeFrom(config.baseUrl) }
+
+            val token = runBlocking { localStorage.getAccessToken() }
+            if (token != null) {
+                header("Authorization", "Bearer $token")
+            }
+
+            header(HttpHeaders.Accept, ContentType.Application.Json)
+            contentType(ContentType.Application.Json)
+        }
+
         install(Logging) {
             level = LogLevel.BODY
             logger =  object : Logger {
@@ -54,11 +70,6 @@ actual fun provideHttpClient(config: NetworkConfig): HttpClient =
                     isLenient = true
                 }
             )
-        }
-        defaultRequest {
-            url { takeFrom(config.baseUrl) }
-            header(HttpHeaders.Accept, ContentType.Application.Json)
-            contentType(ContentType.Application.Json)
         }
     }
 

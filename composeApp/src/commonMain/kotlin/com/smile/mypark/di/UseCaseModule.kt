@@ -7,7 +7,7 @@ import com.smile.mypark.domain.usecase.VerifyCodeUseCase
 import org.koin.dsl.module
 
 val useCaseModule = module {
-    factory { LoginUseCase(get()) }
+    factory { LoginUseCase(get(),get()) }
     factory { SendVerificationCodeUseCase(get()) }
     factory { VerifyCodeUseCase(get()) }
     factory { RegisterUseCase(get()) }

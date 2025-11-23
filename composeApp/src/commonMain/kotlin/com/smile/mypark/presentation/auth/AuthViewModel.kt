@@ -2,6 +2,7 @@ package com.smile.mypark.presentation.auth
 
 import androidx.lifecycle.viewModelScope
 import com.smile.mypark.core.base.BaseViewModel
+import com.smile.mypark.data.remote.dto.type.AuthType
 import com.smile.mypark.domain.error.NotMemberException
 import com.smile.mypark.domain.model.SignStartArgs
 import com.smile.mypark.domain.repository.KakaoLoginRepository
@@ -44,7 +45,7 @@ class AuthViewModel(
 
         updateState { copy(loading = true, error = null) }
 
-        runCatching { loginUseCase(s.id, s.pw) }
+        runCatching { loginUseCase(s.id, s.pw, AuthType.normal) }
             .onSuccess { t ->
                 println("[Login] success id=${s.id} success=${t.accessToken}")
                 updateState { copy(loading = false, pw = "") }
@@ -73,7 +74,7 @@ class AuthViewModel(
 
             // 3) uid 자리에 kakaoId, password는 빈 문자열로 로그인 API 호출
             println("[Kakao] about to call loginUseCase uid=$kakaoId")
-            val tokens = loginUseCase(kakaoId, "")
+            val tokens = loginUseCase(kakaoId, "", AuthType.kakao)
             println("[Kakao] loginUseCase OK uid=$kakaoId")
 
             tokens
@@ -120,7 +121,7 @@ class AuthViewModel(
             println("[Naver] fetched id=$naverId")
 
             println("[Naver] about to call loginUseCase id=$naverId")
-            val tokens = loginUseCase(naverId, "")
+            val tokens = loginUseCase(naverId, "", AuthType.kakao)
             println("[Naver] loginUseCase OK id=$naverId")   // 성공시에만 찍힘
 
             tokens
