@@ -121,7 +121,7 @@ class AuthViewModel(
             println("[Naver] fetched id=$naverId")
 
             println("[Naver] about to call loginUseCase id=$naverId")
-            val tokens = loginUseCase(naverId, "", AuthType.kakao)
+            val tokens = loginUseCase(naverId, "", AuthType.naver)
             println("[Naver] loginUseCase OK id=$naverId")   // 성공시에만 찍힘
 
             tokens
