@@ -2,6 +2,8 @@ package com.smile.mypark.di
 
 import com.smile.mypark.presentation.auth.AuthViewModel
 import com.smile.mypark.presentation.home.HomeViewModel
+import com.smile.mypark.presentation.home.MapIosApi
+import com.smile.mypark.presentation.home.MapViewModel
 import com.smile.mypark.presentation.qr.QrViewModel
 import com.smile.mypark.presentation.sign.SignViewModel
 import org.koin.core.context.startKoin
@@ -16,7 +18,7 @@ val appModule = module {
     viewModelOf(::HomeViewModel)
     viewModelOf(::AuthViewModel)
     viewModelOf(::SignViewModel)
-
+    viewModelOf(::MapViewModel)
 }
 
 fun initializeKoin(config: KoinAppDeclaration? = null) {
@@ -30,6 +32,14 @@ fun initializeKoin(config: KoinAppDeclaration? = null) {
             dataStoreModule,
             useCaseModule,
             appModule
+        )
+    }.also { koinApp ->
+        val koin = koinApp.koin
+
+        MapIosApi.init(
+            search = koin.get(),
+            like = koin.get(),
+            unlike = koin.get()
         )
     }
 }

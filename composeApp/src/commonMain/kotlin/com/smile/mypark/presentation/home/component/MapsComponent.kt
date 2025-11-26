@@ -78,6 +78,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Immutable
 data class StoreUi(
+    val shopCode: String,
     val name: String,
     val slots: Int,
     val distanceText: String,
@@ -85,7 +86,8 @@ data class StoreUi(
     val rating: Float,
     val phone: String,
     val lat: Double,
-    val lng: Double
+    val lng: Double,
+    val isLiked: Boolean
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -103,6 +105,7 @@ fun MapOverlayUI(
     selected: StoreUi?,
     onCall: (StoreUi) -> Unit = {},
     onRoute: (StoreUi) -> Unit = {},
+    hasResult: Boolean,
 ) {
     Box(modifier.fillMaxSize()) {
         Column(
@@ -116,35 +119,39 @@ fun MapOverlayUI(
                 keyword = keyword,
                 onKeywordChange = onKeywordChange,
                 onBack = onBack,
-                onMenu = onMenu
+                onMenu = onMenu,
+                onSearch = onSearch
             )
         }
 
-        Box(Modifier.fillMaxSize()) {
-            StoreHeartButton(
-                onAddList = onAddList,
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(bottom = 250.dp, start = 15.dp)
-            )
-        }
+        if (hasResult) {
+            Box(Modifier.fillMaxSize()) {
+                StoreHeartButton(
+                    isLiked = selected?.isLiked == true,
+                    onAddList = onAddList,
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(bottom = 250.dp, start = 15.dp)
+                )
+            }
 
-        Box(Modifier.fillMaxSize()) {
-            StoreListButton(
-                onOpenList = onOpenList,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 250.dp)
-            )
-        }
+            Box(Modifier.fillMaxSize()) {
+                StoreListButton(
+                    onOpenList = onOpenList,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 250.dp)
+                )
+            }
 
-        Box(Modifier.fillMaxSize()) {
-            MapLocationButton(
-                onLocation = onLocation,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(bottom = 250.dp, end = 15.dp)
-            )
+            Box(Modifier.fillMaxSize()) {
+                MapLocationButton(
+                    onLocation = onLocation,
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(bottom = 250.dp, end = 15.dp)
+                )
+            }
         }
 
         if (selected != null) {
@@ -479,14 +486,19 @@ fun StoreListButton(
 
 @Composable
 fun StoreHeartButton(
+    isLiked: Boolean,
     onAddList: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val containerColor = if (isLiked) Primary else White
+    val contentColor = if (isLiked) Color.White else Primary
+
     Button(
         onClick = onAddList,
         shape = RoundedCornerShape(13.5.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = White
+            containerColor = containerColor,
+            contentColor = contentColor
         ),
         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
         modifier = modifier
@@ -494,7 +506,10 @@ fun StoreHeartButton(
             .defaultMinSize(minWidth = 64.dp, minHeight = 30.dp)
     ) {
         Icon(
-            painter = painterResource(Res.drawable.ic_heart_black_line),
+            painter = painterResource(
+                if (isLiked) Res.drawable.ic_heart_white
+                else Res.drawable.ic_heart_black_line
+            ),
             contentDescription = "목록",
             tint = Color.Unspecified,
             modifier = Modifier.size(16.dp)
@@ -506,7 +521,7 @@ fun StoreHeartButton(
                 fontSize = 15.toFixedSp(),
                 lineHeight = 19.toFixedSp()
             ),
-            color = Primary,
+            color = contentColor,
             maxLines = 1,
             modifier = Modifier
                 .padding(bottom = 3.dp),
@@ -551,16 +566,19 @@ fun Preview_MapOverlayUI_Default() {
             onMenu = {},
             onOpenList = {},
             selected = StoreUi(
+                shopCode = "1234",
                 name = "마이파크 가산점",
                 slots = 14,
                 distanceText = "645m",
                 address = "금천구 가산동",
                 rating = 4.0f,
                 phone = "02-123-4567",
-                lat = 37.4789, lng = 126.8811
+                lat = 37.4789, lng = 126.8811,
+                isLiked = true
             ),
             onCall = {},
-            onRoute = {}
+            onRoute = {},
+            hasResult = true
         )
     }
 }
@@ -571,13 +589,15 @@ fun Preview_StoreBottomCard() {
     MaterialTheme {
         StoreBottomCard(
             store = StoreUi(
+                shopCode = "1234",
                 name = "마이파크 개포점",
                 slots = 7,
                 distanceText = "1.2km",
                 address = "강남구 개포동",
                 rating = 5f,
                 phone = "02-555-7777",
-                lat = 37.48, lng = 127.06
+                lat = 37.48, lng = 127.06,
+                isLiked = false
             ),
             onCall = {},
             onRoute = {},

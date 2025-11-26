@@ -8,5 +8,5 @@ data class ApiResult<T>(
     @SerialName("isSuccess") val isSuccess: Boolean,
     @SerialName("code") val code: String? = null,
     @SerialName("message") val message: String? = null,
-    @SerialName("result") val result: T
+    @SerialName("result") val result: T? = null
 )

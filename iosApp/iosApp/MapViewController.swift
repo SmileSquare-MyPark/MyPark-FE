@@ -28,6 +28,12 @@ final class MapViewController: UIViewController, CLLocationManagerDelegate {
     private var didInitCamera = false
     private let locationManager = CLLocationManager()
 
+    private var stores: [ComposeApp.StoreUi] = []
+    private var selectedStore: ComposeApp.StoreUi? = nil
+
+    private var bottomVC: UIViewController?
+    private var buttonsVC: UIViewController?
+
     private func makeTransparent(_ view: UIView) {
         view.isOpaque = false
         view.backgroundColor = .clear
@@ -47,6 +53,90 @@ final class MapViewController: UIViewController, CLLocationManagerDelegate {
                                         v.bottomAnchor.constraint(equalTo: container.bottomAnchor),
                                     ])
         vc.didMove(toParent: self)
+    }
+
+    private func clear(child vc: UIViewController?) {
+        guard let vc = vc else { return }
+        vc.willMove(toParent: nil)
+        vc.view.removeFromSuperview()
+        vc.removeFromParent()
+    }
+
+    private func updateBottomAndButtons() {
+        clear(child: bottomVC)
+        clear(child: buttonsVC)
+
+        guard let selected = selectedStore else {
+            return
+        }
+
+        let isLiked = selected.isLiked
+
+        // 하단 카드
+        let bottom = ComposeApp.MapComponentKt.MapOverlayBottomCardViewController(
+            selected: selected,
+            onOpenList: {
+                // TODO: 목록 화면으로 이동
+            },
+            onCall: { store in
+                // TODO: 전화 걸기 (tel://store.phone)
+                print("[iOS] call: \(store.phone)")
+            },
+            onRoute: { store in
+                // TODO: 네이버 지도 길찾기 등
+                print("[iOS] route to: \(store.name)")
+            }
+        )
+        attach(child: bottom, to: bottomOverlay)
+        bottomVC = bottom
+
+        // 하트/목록/내위치 버튼
+        let buttons = ComposeApp.MapComponentKt.MapOverlayFloatButtonsViewController(
+            onAddList: { [weak self] in
+                guard let self = self, let current = self.selectedStore else { return }
+
+                let currentLiked = current.isLiked
+                let newLiked = !currentLiked
+
+                let updated = ComposeApp.StoreUi(
+                    shopCode: current.shopCode,
+                    name: current.name,
+                    slots: current.slots,
+                    distanceText: current.distanceText,
+                    address: current.address,
+                    rating: current.rating,
+                    phone: current.phone,
+                    lat: current.lat,
+                    lng: current.lng,
+                    isLiked: newLiked
+                )
+                self.selectedStore = updated
+                self.updateBottomAndButtons()
+
+                ComposeApp.MapIosApi.shared.toggleLike(
+                    shopCode: current.shopCode,
+                    like: newLiked
+                ) { error in
+                    if let error = error {
+                        print("[iOS] 찜 토글 실패: \(error.message ?? "unknown error")")
+                        return
+                    }
+                    print("[iOS] 찜 토글 성공")
+                }
+            },
+            onOpenList: {
+                print("[iOS] 매장 목록 버튼 클릭")
+                // TODO: 목록 팝업, 화면 이동 등
+            },
+            onLocation: { [weak self] in
+                guard let self = self else { return }
+                self.mapView.mapView.positionMode = .direction
+                self.locationManager.startUpdatingLocation()
+            },
+            isLiked: isLiked
+        )
+        attach(child: buttons, to: buttonsOverlay)
+        buttonsVC = buttons
     }
 
     override func viewDidLoad() {
@@ -107,32 +197,41 @@ final class MapViewController: UIViewController, CLLocationManagerDelegate {
         let topVC = ComposeApp.MapComponentKt.MapOverlayTopBarViewController(
             onBack: { [weak self] in self?.dismiss(animated: true) },
             onMenu: { /* TODO */ },
-            onSearch: { _ in /* TODO */ }
+            onSearch: { [weak self] keyword in
+                guard let self = self else { return }
+
+                ComposeApp.MapIosApi.shared.searchStores(keyword: keyword) { result, error in
+                    if let error = error {
+                        print("[iOS] 매장 검색 실패: \(error.message ?? "unknown error")")
+                        return
+                    }
+                    guard let result = result, !result.isEmpty else {
+                        print("[iOS] 검색 결과 없음")
+                        self.stores = []
+                        self.selectedStore = nil
+                        self.updateBottomAndButtons()
+                        return
+                    }
+
+                    print("[iOS] 검색 결과 개수: \(result.count)")
+                    self.stores = result
+                    self.selectedStore = result.first
+                    self.updateBottomAndButtons()
+
+                    // TODO: 여기서 selectedStore의 좌표(lat/lng)가 있으면
+                    // self.mapView.mapView.moveCamera(...) 로 카메라 이동도 가능
+                }
+            }
         )
         attach(child: topVC, to: topOverlay)
 
-        let buttonsVC = ComposeApp.MapComponentKt.MapOverlayFloatButtonsViewController(
-            onAddList: { /* TODO */ },
-            onOpenList: { /* TODO */ },
-            onLocation: { [weak self] in
-                guard let self = self else { return }
-                self.mapView.mapView.positionMode = .direction
-                self.locationManager.startUpdatingLocation()
-            }
-        )
-        attach(child: buttonsVC, to: buttonsOverlay)
-
-        let bottomVC = ComposeApp.MapComponentKt.MapOverlayBottomCardViewController(
-            onOpenList: { /* TODO */ },
-            onCall: { _ in /* TODO */ },
-            onRoute: { _ in /* TODO */ }
-        )
-        attach(child: bottomVC, to: bottomOverlay)
+        updateBottomAndButtons()
 
         mapView.layer.zPosition = 0
         topOverlay.layer.zPosition = 1
         buttonsOverlay.layer.zPosition = 1
         bottomOverlay.layer.zPosition = 1
+
     }
 
     override func viewDidAppear(_ animated: Bool) {

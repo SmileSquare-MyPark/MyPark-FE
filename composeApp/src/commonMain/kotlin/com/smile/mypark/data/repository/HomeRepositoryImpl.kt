@@ -17,6 +17,9 @@ class HomeRepositoryImpl(
     override suspend fun getHome(): HomeDto {
         val res = service.getHome()
 
+        if (!res.isSuccess || res.result == null) {
+            throw IllegalStateException(res.message ?: "홈 정보 조회 실패")
+        }
         return res.result
     }
 }

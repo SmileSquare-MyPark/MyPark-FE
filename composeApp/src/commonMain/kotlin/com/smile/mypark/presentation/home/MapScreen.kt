@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,6 +17,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import com.smile.mypark.presentation.home.component.MapOverlayUI
 import com.smile.mypark.presentation.home.component.StoreUi
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 expect fun MyNaverMap(
@@ -35,54 +37,83 @@ internal fun MapRoute(
 }
 
 @Composable
-private fun MapScreen() {
-    var ready by remember { mutableStateOf(false) }
-    var keyword by remember { mutableStateOf(TextFieldValue("")) }
+private fun MapScreen(
+    viewModel: MapViewModel = koinViewModel()
+) {
+    val state by viewModel.viewState.collectAsState()
 
-    val selected by remember {
-        mutableStateOf(
-            StoreUi(
-                name = "마이파크 가산점",
-                slots = 14,
-                distanceText = "645m",
-                address = "금천구 가산동",
-                rating = 5f,
-                phone = "02-123-4567",
-                lat = 37.4789, lng = 126.8811
-            )
-        )
-    }
     LaunchedEffect(Unit) {
-        if (!isMapSupported()) openNativeMap()
+        if (!isMapSupported()) {
+            openNativeMap()
+        }
     }
 
-    if (isMapSupported()) {
-        Box(Modifier.fillMaxSize()) {
-            MyNaverMap(
-                modifier = Modifier.fillMaxSize(),
-                onReady = { ready = true }
-            )
-
-            MapOverlayUI(
-                keyword = keyword,
-                onKeywordChange = { keyword = it },
-                onSearch = { /* TODO: 검색 로직 */ },
-                onBack = { /* TODO */ },
-                onMenu = { /* TODO */ },
-                onOpenList = { /* TODO: 목록 화면 */ },
-                selected = selected,
-                onCall = { /* TODO: 전화 */ },
-                onRoute = { store ->
-                    // TODO: 길찾기(안드로이드: Intent로 Naver Map/지도 앱 열기 등)
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is MapContract.SideEffect.Toast -> {
+                    // TODO: 플랫폼별 Toast 처리
                 }
-            )
 
-            if (!ready) {
-                CircularProgressIndicator(Modifier.align(Alignment.Center))
+                MapContract.SideEffect.NavigateBack -> {
+                    // TODO: NavController.popBackStack() 등
+                }
+
+                MapContract.SideEffect.OpenMenu -> {
+                    // TODO: 드로어 / 메뉴 열기
+                }
+
+                MapContract.SideEffect.OpenStoreList -> {
+                    // TODO: 매장 목록 화면 네비게이션
+                }
+
+                is MapContract.SideEffect.MoveCamera -> {
+                    // TODO: MyNaverMap actual 구현에서 카메라 이동 처리할 수 있게
+                }
+
+                is MapContract.SideEffect.CallTo -> {
+                    // TODO: Android에서 ACTION_DIAL Intent 등
+                }
+
+                is MapContract.SideEffect.OpenRoute -> {
+                    // TODO: 네이버지도 / 지도 앱으로 길찾기 인텐트
+                }
             }
         }
-    } else {
+    }
+
+    if (!isMapSupported()) {
         Box(Modifier.fillMaxSize()) {
+            CircularProgressIndicator(Modifier.align(Alignment.Center))
+        }
+        return
+    }
+
+    Box(Modifier.fillMaxSize()) {
+
+        MyNaverMap(
+            modifier = Modifier.fillMaxSize(),
+            onReady = {
+                viewModel.setEvent(MapContract.Event.MapReady)
+            }
+        )
+
+        MapOverlayUI(
+            keyword = state.keyword,
+            onKeywordChange = { viewModel.setEvent(MapContract.Event.KeywordChanged(it)) },
+            onSearch = { keyword -> viewModel.setEvent(MapContract.Event.ClickSearch(keyword)) },
+            onBack = { viewModel.setEvent(MapContract.Event.ClickBack) },
+            onMenu = { viewModel.setEvent(MapContract.Event.ClickMenu) },
+            onOpenList = { viewModel.setEvent(MapContract.Event.ClickOpenList) },
+            onLocation = { viewModel.setEvent(MapContract.Event.ClickMyLocation) },
+            selected = state.selected,
+            onCall = { store -> viewModel.setEvent(MapContract.Event.ClickCall(store)) },
+            onRoute = { store -> viewModel.setEvent(MapContract.Event.ClickRoute(store)) },
+            hasResult = state.stores.isNotEmpty(),
+            onAddList = { viewModel.setEvent(MapContract.Event.ClickToggleLike) }
+        )
+
+        if (state.isLoading || !state.isMapReady) {
             CircularProgressIndicator(Modifier.align(Alignment.Center))
         }
     }

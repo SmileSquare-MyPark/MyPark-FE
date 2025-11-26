@@ -5,10 +5,12 @@ import com.smile.mypark.data.repository.HomeRepositoryImpl
 import com.smile.mypark.data.repository.KakaoLoginRepositoryImpl
 import com.smile.mypark.data.repository.NaverLoginRepositoryImpl
 import com.smile.mypark.data.repository.SignRepositoryImpl
+import com.smile.mypark.data.repository.ShopRepositoryImpl
 import com.smile.mypark.domain.repository.AuthRepository
 import com.smile.mypark.domain.repository.HomeRepository
 import com.smile.mypark.domain.repository.KakaoLoginRepository
 import com.smile.mypark.domain.repository.NaverLoginRepository
+import com.smile.mypark.domain.repository.ShopRepository
 import com.smile.mypark.domain.repository.SignRepository
 import org.koin.dsl.module
 
@@ -18,4 +20,5 @@ val repositoryModule = module {
     single<NaverLoginRepository> { NaverLoginRepositoryImpl(get()) }
     single<KakaoLoginRepository> { KakaoLoginRepositoryImpl(get()) }
     single<HomeRepository> { HomeRepositoryImpl(get()) }
+    single<ShopRepository> { ShopRepositoryImpl(get()) }
 }

@@ -42,12 +42,17 @@ private fun MapOverlayTopBar(
 
 @Composable
 private fun MapOverlayBottomCard(
-    selected: StoreUi,
+    selected: StoreUi?,
     onOpenList: () -> Unit,
     onCall: (StoreUi) -> Unit,
     onRoute: (StoreUi) -> Unit,
 ) {
-    Box(Modifier.fillMaxSize().background(Transparent)) {
+    if (selected == null) return
+
+    Box(Modifier
+        .fillMaxSize()
+        .background(Transparent)
+    ) {
         StoreBottomCard(
             store = selected,
             onCall = onCall,
@@ -62,12 +67,17 @@ private fun MapOverlayBottomCard(
 
 @Composable
 private fun MapOverlayFloatButtonsContent(
+    isLiked: Boolean,
     onAddList: () -> Unit,
     onOpenList: () -> Unit,
     onLocation: () -> Unit,
 ) {
-    Box(Modifier.fillMaxSize().background(Transparent)) {
+    Box(Modifier
+        .fillMaxSize()
+        .background(Transparent)
+    ) {
         StoreHeartButton(
+            isLiked = isLiked,
             onAddList = onAddList,
             modifier = Modifier
                 .align(Alignment.BottomStart)
@@ -106,20 +116,11 @@ fun MapOverlayTopBarViewController(
 }
 
 fun MapOverlayBottomCardViewController(
+    selected: StoreUi?,
     onOpenList: () -> Unit,
     onCall: (StoreUi) -> Unit,
     onRoute: (StoreUi) -> Unit,
 ): UIViewController = ComposeUIViewController {
-    // 데모용 더미 데이터
-    val selected = StoreUi(
-        name = "마이파크 가산점",
-        slots = 14,
-        distanceText = "645m",
-        address = "금천구 가산동",
-        rating = 5f,
-        phone = "02-123-4567",
-        lat = 37.4789, lng = 126.8811
-    )
     MapOverlayBottomCard(
         selected = selected,
         onOpenList = onOpenList,
@@ -131,9 +132,11 @@ fun MapOverlayBottomCardViewController(
 fun MapOverlayFloatButtonsViewController(
     onAddList: () -> Unit,
     onOpenList: () -> Unit,
-    onLocation: () -> Unit
+    onLocation: () -> Unit,
+    isLiked: Boolean = false
 ): UIViewController = ComposeUIViewController {
     MapOverlayFloatButtonsContent(
+        isLiked = isLiked,
         onAddList = onAddList,
         onOpenList = onOpenList,
         onLocation = onLocation
