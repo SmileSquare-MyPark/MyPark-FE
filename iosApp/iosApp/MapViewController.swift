@@ -8,22 +8,32 @@ import CoreLocation
 import ComposeApp
 
 final class HitTestPassThroughView: UIView {
-    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        for sub in subviews where sub.isUserInteractionEnabled && !sub.isHidden && sub.alpha > 0.01 {
+
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        if !self.isUserInteractionEnabled || self.isHidden || self.alpha < 0.01 {
+            return nil
+        }
+
+        for sub in subviews.reversed() where sub.isUserInteractionEnabled && !sub.isHidden && sub.alpha > 0.01 {
             let p = sub.convert(point, from: self)
-            if sub.hitTest(p, with: event) != nil {
-                return true
+            if let hitView = sub.hitTest(p, with: event) {
+                return hitView
             }
         }
-        return false
+
+        return nil
+    }
+
+    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        return super.point(inside: point, with: event)
     }
 }
 
 final class MapViewController: UIViewController, CLLocationManagerDelegate {
     private let mapView = NMFNaverMapView()
-    private let topOverlay = HitTestPassThroughView()
-    private let buttonsOverlay = HitTestPassThroughView()
-    private let bottomOverlay = HitTestPassThroughView()
+    private let topOverlay = UIView()
+    private let buttonsOverlay = UIView()
+    private let bottomOverlay = UIView()
 
     private var didInitCamera = false
     private let locationManager = CLLocationManager()
@@ -195,7 +205,11 @@ final class MapViewController: UIViewController, CLLocationManagerDelegate {
                                     ])
 
         let topVC = ComposeApp.MapComponentKt.MapOverlayTopBarViewController(
-            onBack: { [weak self] in self?.dismiss(animated: true) },
+            onBack: { [weak self] in
+                self?.dismiss(animated: true, completion: {
+                    MapIosStarter.resetPresented()
+                })
+            },
             onMenu: { /* TODO */ },
             onSearch: { [weak self] keyword in
                 guard let self = self else { return }

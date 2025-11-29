@@ -99,7 +99,10 @@ internal class MainNavigator(
     }
 
     fun navigateMap() {
-        navController.navigate(Route.Map)
+        navController.navigate(Route.Map) {
+            launchSingleTop = false
+            restoreState = false
+        }
     }
 
     fun navigateContestDetail(contestId: Long) {

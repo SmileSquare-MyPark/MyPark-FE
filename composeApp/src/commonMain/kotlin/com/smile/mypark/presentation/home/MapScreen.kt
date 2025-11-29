@@ -8,14 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.lifecycle.ViewModel
 import com.smile.mypark.presentation.home.component.MapOverlayUI
-import com.smile.mypark.presentation.home.component.StoreUi
+import com.smile.mypark.presentation.main.navigation.MainNavigator
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -31,22 +28,18 @@ expect fun openNativeMap()
 
 @Composable
 internal fun MapRoute(
-    padding: PaddingValues
+    padding: PaddingValues,
+    navigator: MainNavigator,
 ) {
-    MapScreen()
+    MapScreen(navigator = navigator)
 }
 
 @Composable
 private fun MapScreen(
-    viewModel: MapViewModel = koinViewModel()
+    viewModel: MapViewModel = koinViewModel(),
+    navigator: MainNavigator,
 ) {
     val state by viewModel.viewState.collectAsState()
-
-    LaunchedEffect(Unit) {
-        if (!isMapSupported()) {
-            openNativeMap()
-        }
-    }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -56,7 +49,7 @@ private fun MapScreen(
                 }
 
                 MapContract.SideEffect.NavigateBack -> {
-                    // TODO: NavController.popBackStack() 등
+                    navigator.navigateUp()
                 }
 
                 MapContract.SideEffect.OpenMenu -> {
@@ -117,10 +110,4 @@ private fun MapScreen(
             CircularProgressIndicator(Modifier.align(Alignment.Center))
         }
     }
-}
-
-@Preview
-@Composable
-private fun PreviewMap() {
-    MapScreen()
 }

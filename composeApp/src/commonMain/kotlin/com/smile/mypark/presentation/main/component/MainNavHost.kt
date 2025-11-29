@@ -22,6 +22,8 @@ import com.smile.mypark.presentation.contest.ContestDetailRoute
 import com.smile.mypark.presentation.contest.ContestRoute
 import com.smile.mypark.presentation.home.HomeRoute
 import com.smile.mypark.presentation.home.MapRoute
+import com.smile.mypark.presentation.home.isMapSupported
+import com.smile.mypark.presentation.home.openNativeMap
 import com.smile.mypark.presentation.main.SplashScreen
 import com.smile.mypark.presentation.main.navigation.MainNavigator
 import com.smile.mypark.presentation.main.navigation.MainTabRoute
@@ -240,7 +242,18 @@ internal fun MainNavHost(
             }
 
             composable<Route.Map> {
-                MapRoute(padding = padding)
+                if (isMapSupported()) {
+                    MapRoute(
+                        padding = padding,
+                        navigator = navigator
+                    )
+                } else {
+                    LaunchedEffect(Unit) {
+                        openNativeMap()
+                        navigator.navigateUp()
+                    }
+                    Box(Modifier.fillMaxSize())
+                }
             }
 
             composable<Route.ContestDetail> { backStackEntry ->
